@@ -1,4 +1,7 @@
+#include "core/Application.h"
+
 int main()
 {
-    return 0;
+    redclone::core::Application app;
+    return app.run();
 }
