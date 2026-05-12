@@ -20,7 +20,7 @@ public:
     void pollEvents();
 
 private:
-    window::Window& window_;
-    InputSystem& inputSystem_;
+    window::Window& m_Window;
+    InputSystem& m_InputSystem;
 };
 } // namespace redclone::engine::input
