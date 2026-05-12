@@ -6,17 +6,20 @@
 
 namespace redclone::engine::rendering
 {
-SfmlRenderer::SfmlRenderer(window::Window& window) : window_(window)
-{
-}
+SfmlRenderer::SfmlRenderer(window::Window& window) : m_Window(window) {}
 
 void SfmlRenderer::beginFrame()
 {
-    window_.nativeWindow().clear(sf::Color::Black);
+    m_Window.nativeWindow().clear(sf::Color::Black);
 }
 
 void SfmlRenderer::endFrame()
 {
-    window_.display();
+    m_Window.display();
+}
+
+sf::RenderWindow& SfmlRenderer::nativeWindow()
+{
+    return m_Window.nativeWindow();
 }
 } // namespace redclone::engine::rendering

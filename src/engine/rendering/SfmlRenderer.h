@@ -2,6 +2,11 @@
 
 #include "engine/rendering/IRenderer.h"
 
+namespace sf
+{
+class RenderWindow;
+}
+
 namespace redclone::engine::window
 {
 class Window;
@@ -17,7 +22,9 @@ public:
     void beginFrame() override;
     void endFrame() override;
 
+    sf::RenderWindow& nativeWindow();
+
 private:
-    window::Window& window_;
+    window::Window& m_Window;
 };
 } // namespace redclone::engine::rendering

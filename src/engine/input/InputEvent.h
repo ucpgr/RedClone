@@ -9,7 +9,8 @@ enum class InputEventType
     KeyReleased,
     MouseButtonPressed,
     MouseButtonReleased,
-    MouseMoved
+    MouseMoved,
+    MouseWheelScrolled
 };
 
 struct InputEvent
@@ -19,5 +20,6 @@ struct InputEvent
     int mouseButton{};
     int mouseX{};
     int mouseY{};
+    float mouseWheelDelta{};
 };
 } // namespace redclone::engine::input
