@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++0x -Wall -pedantic -Werror -Wextra -Wno-unused-function -Wno-deprecated-declarations -Wl,--dependency-file=CMakeFiles/vector_simd_padding_tests.dir/link.d CMakeFiles/vector_simd_padding_tests.dir/vector_test/vector_test.cpp.o -o ../../mathfu-src/unit_tests/vector_simd_padding_tests  googletest/libgtest.a

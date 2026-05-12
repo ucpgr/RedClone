@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++0x -Wall -pedantic -Werror -Wextra -Wno-unused-function -Wno-deprecated-declarations -Wl,--dependency-file=CMakeFiles/vector_benchmarks.dir/link.d CMakeFiles/vector_benchmarks.dir/vector_benchmark/main.cpp.o -o vector_benchmarks  -lrt

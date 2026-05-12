@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++0x -Wall -pedantic -Werror -Wextra -Wno-unused-function -Wno-deprecated-declarations -Wl,--dependency-file=CMakeFiles/quaternion_simd_no_padding_tests.dir/link.d CMakeFiles/quaternion_simd_no_padding_tests.dir/quaternion_test/quaternion_test.cpp.o -o ../../mathfu-src/unit_tests/quaternion_simd_no_padding_tests  googletest/libgtest.a

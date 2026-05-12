@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/CMakeFiles/mathfu-populate"
+		},
+		{
+			"file" : "/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/CMakeFiles/mathfu-populate.rule"
+		},
+		{
+			"file" : "/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/CMakeFiles/mathfu-populate-complete.rule"
+		},
+		{
+			"file" : "/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/mathfu-populate-prefix/src/mathfu-populate-stamp/mathfu-populate-build.rule"
+		},
+		{
+			"file" : "/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/mathfu-populate-prefix/src/mathfu-populate-stamp/mathfu-populate-configure.rule"
+		},
+		{
+			"file" : "/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/mathfu-populate-prefix/src/mathfu-populate-stamp/mathfu-populate-download.rule"
+		},
+		{
+			"file" : "/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/mathfu-populate-prefix/src/mathfu-populate-stamp/mathfu-populate-install.rule"
+		},
+		{
+			"file" : "/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/mathfu-populate-prefix/src/mathfu-populate-stamp/mathfu-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/mathfu-populate-prefix/src/mathfu-populate-stamp/mathfu-populate-patch.rule"
+		},
+		{
+			"file" : "/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/mathfu-populate-prefix/src/mathfu-populate-stamp/mathfu-populate-test.rule"
+		},
+		{
+			"file" : "/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/mathfu-populate-prefix/src/mathfu-populate-stamp/mathfu-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"mathfu-populate"
+		],
+		"name" : "mathfu-populate"
+	}
+}
