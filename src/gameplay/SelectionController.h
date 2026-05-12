@@ -8,12 +8,12 @@ namespace redclone::gameplay
 {
 class SelectionController
 {
-public:
+  public:
     void selectTile(const engine::math::Vec2i& tileCoord);
     void clearSelection();
     [[nodiscard]] std::optional<engine::math::Vec2i> getSelectedTile() const;
 
-private:
+  private:
     std::optional<engine::math::Vec2i> m_SelectedTile;
 };
 } // namespace redclone::gameplay

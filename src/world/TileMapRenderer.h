@@ -7,7 +7,8 @@ namespace redclone::world
 {
 class TileMapRenderer
 {
-public:
-    void render(engine::rendering::IRenderer& renderer, const TileMap& tileMap, const gameplay::SelectionController& selectionController) const;
+  public:
+    void render(engine::rendering::IRenderer& renderer, const TileMap& tileMap,
+                const gameplay::SelectionController& selectionController) const;
 };
-}
+} // namespace redclone::world

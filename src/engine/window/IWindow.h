@@ -4,7 +4,7 @@ namespace redclone::engine::window
 {
 class IWindow
 {
-public:
+  public:
     virtual ~IWindow() = default;
 
     virtual bool isOpen() const = 0;

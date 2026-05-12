@@ -14,12 +14,12 @@ namespace redclone::engine::input
 {
 class SfmlInputAdapter
 {
-public:
+  public:
     SfmlInputAdapter(window::Window& window, InputSystem& inputSystem);
 
     void pollEvents();
 
-private:
+  private:
     window::Window& m_Window;
     InputSystem& m_InputSystem;
 };

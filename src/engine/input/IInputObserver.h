@@ -6,7 +6,7 @@ namespace redclone::engine::input
 {
 class IInputObserver
 {
-public:
+  public:
     virtual ~IInputObserver() = default;
     virtual void onInputEvent(const InputEvent& event) = 0;
 };
