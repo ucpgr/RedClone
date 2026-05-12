@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/math/Vec2.h"
+#include "engine/math/MathTypes.h"
 
 #include <optional>
 
