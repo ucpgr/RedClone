@@ -4,11 +4,22 @@
 
 namespace redclone::core
 {
+namespace
+{
+bool isMovementKey(const engine::input::Key key)
+{
+    using engine::input::Key;
+
+    return key == Key::W || key == Key::A || key == Key::S || key == Key::D || key == Key::Up ||
+           key == Key::Down || key == Key::Left || key == Key::Right;
+}
+} // namespace
+
 void CameraController::onInputEvent(const engine::input::InputEvent& event)
 {
     using namespace engine::input;
 
-    if (event.type == InputEventType::KeyPressed)
+    if (event.type == InputEventType::KeyPressed && isMovementKey(event.key))
     {
         m_HeldKeys.insert(event.key);
     }
