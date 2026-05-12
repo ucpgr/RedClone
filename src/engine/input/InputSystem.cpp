@@ -6,20 +6,20 @@ namespace redclone::engine::input
 {
 void InputSystem::addObserver(IInputObserver& observer)
 {
-    if (std::find(observers_.begin(), observers_.end(), &observer) == observers_.end())
+    if (std::find(m_Observers.begin(), m_Observers.end(), &observer) == m_Observers.end())
     {
-        observers_.push_back(&observer);
+        m_Observers.push_back(&observer);
     }
 }
 
 void InputSystem::removeObserver(IInputObserver& observer)
 {
-    observers_.erase(std::remove(observers_.begin(), observers_.end(), &observer), observers_.end());
+    m_Observers.erase(std::remove(m_Observers.begin(), m_Observers.end(), &observer), m_Observers.end());
 }
 
 void InputSystem::notify(const InputEvent& event) const
 {
-    for (auto* observer : observers_)
+    for (auto* observer : m_Observers)
     {
         if (observer != nullptr)
         {

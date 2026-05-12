@@ -6,7 +6,7 @@ namespace redclone::engine::camera
 {
 class Camera2D
 {
-public:
+  public:
     static constexpr float c_MinZoom = 0.25F;
     static constexpr float c_MaxZoom = 4.0F;
 
@@ -24,7 +24,7 @@ public:
     [[nodiscard]] math::Vec2f screenToWorld(const math::Vec2f& screen) const;
     [[nodiscard]] math::Vec2f worldToScreen(const math::Vec2f& world) const;
 
-private:
+  private:
     math::Vec2f m_Position{};
     float m_Zoom{1.0F};
     math::Vec2f m_ViewportSize{1280.0F, 720.0F};

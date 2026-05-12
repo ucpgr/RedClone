@@ -9,8 +9,14 @@
 namespace redclone::engine::rendering
 {
 SfmlRenderer::SfmlRenderer(window::Window& window) : m_Window(window) {}
-void SfmlRenderer::beginFrame() { m_Window.nativeWindow().clear(sf::Color::Black); }
-void SfmlRenderer::endFrame() { m_Window.display(); }
+void SfmlRenderer::beginFrame()
+{
+    m_Window.nativeWindow().clear(sf::Color::Black);
+}
+void SfmlRenderer::endFrame()
+{
+    m_Window.display();
+}
 void SfmlRenderer::setCamera(const camera::Camera2D& camera)
 {
     sf::View view;
@@ -20,13 +26,22 @@ void SfmlRenderer::setCamera(const camera::Camera2D& camera)
     view.setCenter({pos[0], pos[1]});
     m_Window.nativeWindow().setView(view);
 }
-void SfmlRenderer::resetCamera() { m_Window.nativeWindow().setView(m_Window.nativeWindow().getDefaultView()); }
-auto SfmlRenderer::toSfmlColor(const Color& color) { return sf::Color(color.r, color.g, color.b, color.a); }
-void SfmlRenderer::drawFilledRect(const math::Vec2f& worldPosition, const math::Vec2f& size, const Color& color)
+void SfmlRenderer::resetCamera()
+{
+    m_Window.nativeWindow().setView(m_Window.nativeWindow().getDefaultView());
+}
+auto SfmlRenderer::toSfmlColor(const Color& color)
+{
+    return sf::Color(color.r, color.g, color.b, color.a);
+}
+void SfmlRenderer::drawFilledRect(const math::Vec2f& worldPosition, const math::Vec2f& size,
+                                  const Color& color)
 {
     drawOutlinedRect(worldPosition, size, color, color, 0.0F);
 }
-void SfmlRenderer::drawOutlinedRect(const math::Vec2f& worldPosition, const math::Vec2f& size, const Color& fillColor, const Color& outlineColor, const float outlineThickness)
+void SfmlRenderer::drawOutlinedRect(const math::Vec2f& worldPosition, const math::Vec2f& size,
+                                    const Color& fillColor, const Color& outlineColor,
+                                    const float outlineThickness)
 {
     sf::RectangleShape rectangle;
     rectangle.setPosition({worldPosition[0], worldPosition[1]});
@@ -36,4 +51,4 @@ void SfmlRenderer::drawOutlinedRect(const math::Vec2f& worldPosition, const math
     rectangle.setOutlineThickness(outlineThickness);
     m_Window.nativeWindow().draw(rectangle);
 }
-} // namespace
+} // namespace redclone::engine::rendering
