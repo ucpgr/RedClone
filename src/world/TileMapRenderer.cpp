@@ -12,14 +12,18 @@ void TileMapRenderer::render(engine::rendering::IRenderer& renderer, const TileM
     {
         for (int x = 0; x < TileMap::c_Width; ++x)
         {
-            engine::rendering::Color tileColor{70, 135, 70, 255};
             const auto type = tileMap.getTileTypeAt({x, y});
+            if (!type.has_value())
+            {
+                continue;
+            }
 
-            if (type == TileType::Dirt)
+            engine::rendering::Color tileColor{70, 135, 70, 255};
+            if (*type == TileType::Dirt)
             {
                 tileColor = {130, 100, 60, 255};
             }
-            if (type == TileType::Blocked)
+            if (*type == TileType::Blocked)
             {
                 tileColor = {80, 80, 80, 255};
             }

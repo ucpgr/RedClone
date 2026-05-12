@@ -1,11 +1,16 @@
 #include "world/TileMapGenerator.h"
 
+#include <cassert>
 #include <cstddef>
 
 namespace redclone::world
 {
 void TileMapGenerator::generateTestMap(std::vector<Tile>& tiles, const int width, const int height)
 {
+    assert(width > 0);
+    assert(height > 0);
+    assert(tiles.size() >= static_cast<std::size_t>(width * height));
+
     for (int y = 0; y < height; ++y)
     {
         for (int x = 0; x < width; ++x)

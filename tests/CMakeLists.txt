@@ -1,5 +1,9 @@
 add_executable(RedCloneTests
+    TestMain.cpp
     Camera2DTests.cpp
+    TileMapTests.cpp
+    SelectionControllerTests.cpp
+    CameraControllerTests.cpp
 )
 
 target_include_directories(RedCloneTests PRIVATE
