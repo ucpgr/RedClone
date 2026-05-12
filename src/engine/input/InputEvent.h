@@ -1,5 +1,9 @@
 #pragma once
 
+#include "engine/input/Key.h"
+#include "engine/input/MouseButton.h"
+#include "engine/math/MathTypes.h"
+
 namespace redclone::engine::input
 {
 enum class InputEventType
@@ -16,10 +20,9 @@ enum class InputEventType
 struct InputEvent
 {
     InputEventType type{};
-    int key{};
-    int mouseButton{};
-    int mouseX{};
-    int mouseY{};
+    Key key{Key::Unknown};
+    MouseButton mouseButton{MouseButton::Unknown};
+    math::Vec2i mousePosition{};
     float mouseWheelDelta{};
 };
 } // namespace redclone::engine::input

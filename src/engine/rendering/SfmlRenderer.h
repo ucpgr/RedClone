@@ -2,15 +2,8 @@
 
 #include "engine/rendering/IRenderer.h"
 
-namespace sf
-{
-class RenderWindow;
-}
-
-namespace redclone::engine::window
-{
-class Window;
-}
+namespace sf { class RenderWindow; }
+namespace redclone::engine::window { class Window; }
 
 namespace redclone::engine::rendering
 {
@@ -18,13 +11,15 @@ class SfmlRenderer final : public IRenderer
 {
 public:
     explicit SfmlRenderer(window::Window& window);
-
     void beginFrame() override;
     void endFrame() override;
-
-    sf::RenderWindow& nativeWindow();
+    void setCamera(const camera::Camera2D& camera) override;
+    void resetCamera() override;
+    void drawFilledRect(const math::Vec2f& worldPosition, const math::Vec2f& size, const Color& color) override;
+    void drawOutlinedRect(const math::Vec2f& worldPosition, const math::Vec2f& size, const Color& fillColor, const Color& outlineColor, float outlineThickness) override;
 
 private:
+    static auto toSfmlColor(const Color& color);
     window::Window& m_Window;
 };
 } // namespace redclone::engine::rendering

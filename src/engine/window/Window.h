@@ -4,15 +4,8 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
-namespace redclone::engine::input
-{
-class SfmlInputAdapter;
-}
-
-namespace redclone::engine::rendering
-{
-class SfmlRenderer;
-}
+namespace redclone::engine::input { class SfmlInputAdapter; }
+namespace redclone::engine::rendering { class SfmlRenderer; }
 
 namespace redclone::engine::window
 {
@@ -23,11 +16,10 @@ public:
 
     bool isOpen() const override;
     void close() override;
-    void pollEvents() override;
     void display() override;
 
 private:
-    sf::RenderWindow window_;
+    sf::RenderWindow m_Window;
 
     sf::RenderWindow& nativeWindow();
 
