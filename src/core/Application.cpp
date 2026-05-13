@@ -31,7 +31,10 @@ int Application::run()
 
         m_Renderer.beginFrame();
         m_Renderer.setCamera(m_Camera);
+        m_World.update(deltaSeconds);
+
         m_TileMapRenderer.render(m_Renderer, m_TileMap, m_SelectionController);
+        m_World.render(m_Renderer);
         m_Renderer.resetCamera();
         m_Renderer.endFrame();
     }
@@ -61,18 +64,46 @@ void Application::onInputEvent(const engine::input::InputEvent& event)
         m_Camera.zoomBy(event.mouseWheelDelta * 0.1F);
     }
 
-    if (event.type == InputEventType::MouseButtonPressed && event.mouseButton == MouseButton::Left)
+    if (event.type == InputEventType::MouseButtonPressed)
     {
         const auto worldPosition = m_Camera.screenToWorld(
             {static_cast<float>(event.mousePosition[0]), static_cast<float>(event.mousePosition[1])});
 
-        if (const auto tileCoord = m_TileMap.worldToTile(worldPosition))
+        if (event.mouseButton == MouseButton::Left)
         {
-            m_SelectionController.selectTile(*tileCoord);
+            m_World.selectUnitAt(worldPosition);
+            const bool hasSelectedUnit = [&]()
+            {
+                for (const auto entityId : m_World.getEntityManager().getAliveEntities())
+                {
+                    if (m_World.getEntityManager().hasSelection(entityId))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }();
+
+            if (!hasSelectedUnit)
+            {
+                if (const auto tileCoord = m_TileMap.worldToTile(worldPosition))
+                {
+                    m_SelectionController.selectTile(*tileCoord);
+                }
+                else
+                {
+                    m_SelectionController.clearSelection();
+                }
+            }
+            else
+            {
+                m_SelectionController.clearSelection();
+            }
         }
-        else
+
+        if (event.mouseButton == MouseButton::Right)
         {
-            m_SelectionController.clearSelection();
+            m_World.issueMoveCommandToSelected(worldPosition);
         }
     }
 }

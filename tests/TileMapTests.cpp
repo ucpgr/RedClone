@@ -12,10 +12,21 @@ int runTileMapTests()
         return 1;
     }
 
-    if (tileMap.getTileTypeAt({-1, 0}).has_value())
+    const redclone::engine::math::Vec2i invalidCoords[] = {
+        {-1, 0},
+        {redclone::world::TileMap::c_Width, 0},
+        {0, redclone::world::TileMap::c_Height},
+        {redclone::world::TileMap::c_Width, redclone::world::TileMap::c_Height},
+        {9999, 9999},
+    };
+
+    for (const auto& coord : invalidCoords)
     {
-        std::cerr << "TileMap safe lookup failed\n";
-        return 1;
+        if (tileMap.getTileTypeAt(coord).has_value())
+        {
+            std::cerr << "TileMap safe lookup failed\n";
+            return 1;
+        }
     }
 
     return 0;

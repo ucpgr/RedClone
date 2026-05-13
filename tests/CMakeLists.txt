@@ -4,6 +4,8 @@ add_executable(RedCloneTests
     TileMapTests.cpp
     SelectionControllerTests.cpp
     CameraControllerTests.cpp
+    EcsTests.cpp
+    WorldTests.cpp
 )
 
 target_include_directories(RedCloneTests PRIVATE
@@ -21,3 +23,9 @@ target_sources(RedCloneTests PRIVATE
 )
 
 add_test(NAME RedCloneTests COMMAND RedCloneTests)
+
+
+target_sources(RedCloneTests PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/ecs/EntityManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/world/World.cpp
+)
