@@ -5,6 +5,7 @@ int runCameraControllerTests();
 int runEcsTests();
 int runWorldTests();
 int runIsometricTests();
+int runScriptEngineTests();
 
 int main()
 {
@@ -33,6 +34,10 @@ int main()
         return 1;
     }
     if (runIsometricTests() != 0)
+    {
+        return 1;
+    }
+    if (runScriptEngineTests() != 0)
     {
         return 1;
     }

@@ -7,6 +7,7 @@ add_executable(RedCloneTests
     EcsTests.cpp
     WorldTests.cpp
     IsometricTests.cpp
+    ScriptEngineTests.cpp
 )
 
 target_include_directories(RedCloneTests PRIVATE
@@ -22,12 +23,11 @@ target_sources(RedCloneTests PRIVATE
     ${CMAKE_SOURCE_DIR}/src/gameplay/SelectionController.cpp
     ${CMAKE_SOURCE_DIR}/src/core/CameraController.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/math/Isometric.cpp
-)
-
-add_test(NAME RedCloneTests COMMAND RedCloneTests)
-
-
-target_sources(RedCloneTests PRIVATE
     ${CMAKE_SOURCE_DIR}/src/ecs/EntityManager.cpp
     ${CMAKE_SOURCE_DIR}/src/world/World.cpp
+    ${CMAKE_SOURCE_DIR}/src/scripting/ScriptEngine.cpp
 )
+
+target_link_libraries(RedCloneTests PRIVATE Lua::Lua LuaCxx::LuaCxx)
+
+add_test(NAME RedCloneTests COMMAND RedCloneTests)
