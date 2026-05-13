@@ -1,9 +1,13 @@
 #include "engine/assets/TileAssetLoader.h"
+#include "core/Logger.h"
 
 #include <SFML/Graphics/Texture.hpp>
 
 #include <filesystem>
+#include <ranges>
+#include <sstream>
 #include <unordered_set>
+#include <vector>
 
 extern "C"
 {
@@ -148,31 +152,56 @@ bool TileAssetLoader::loadMetadataFile(const std::string& filePath, TileSheetDef
 bool TileAssetLoader::loadDirectory(const std::string& directoryPath, TileAssetRegistry& out, std::string& error)
 {
     namespace fs = std::filesystem;
-    if (!fs::exists(directoryPath)) return true;
+    REDCLONE_LOG_INFO(std::string("Tile asset directory: ") + directoryPath);
+    if (!fs::exists(directoryPath))
+    {
+        REDCLONE_LOG_WARNING(std::string("Tile asset directory does not exist: ") + directoryPath);
+        return true;
+    }
+    REDCLONE_LOG_INFO(std::string("Tile asset directory exists: ") + directoryPath);
 
     std::string combinedErrors;
+    std::vector<fs::path> metadataFiles;
     for (const auto& entry : fs::directory_iterator(directoryPath))
     {
         if (!entry.is_regular_file() || entry.path().extension() != ".lua") continue;
+        metadataFiles.push_back(entry.path());
+    }
+    std::ranges::sort(metadataFiles);
+    REDCLONE_LOG_INFO(std::string("Tile metadata files found: ") + std::to_string(metadataFiles.size()));
+
+    for (const auto& metadataPath : metadataFiles)
+    {
+        REDCLONE_LOG_DEBUG(std::string("Loading tile metadata: ") + metadataPath.string());
 
         TileSheetDefinition sheet;
         std::string localError;
-        if (!loadMetadataFile(entry.path().string(), sheet, localError))
+        if (!loadMetadataFile(metadataPath.string(), sheet, localError))
         {
-            combinedErrors += "metadata parse failed for '" + entry.path().string() + "': " + localError + "\n";
+            combinedErrors += "metadata parse failed for '" + metadataPath.string() + "': " + localError + "\n";
+            REDCLONE_LOG_ERROR(std::string("Metadata parse failed: ") + metadataPath.string() + " -> " + localError);
             continue;
         }
+        REDCLONE_LOG_DEBUG(std::string("Metadata parse success: ") + metadataPath.string());
 
-        const fs::path texturePath = entry.path().parent_path() / sheet.sheet;
+        const fs::path texturePath = metadataPath.parent_path() / sheet.sheet;
+        REDCLONE_LOG_DEBUG(std::string("Resolved texture path: ") + texturePath.string());
         auto texture = std::make_shared<sf::Texture>();
         if (!texture->loadFromFile(texturePath.string()))
         {
-            combinedErrors += "failed to load texture for metadata '" + entry.path().string() + "': " + texturePath.string() + "\n";
+            combinedErrors +=
+                "failed to load texture for metadata '" + metadataPath.string() + "': " + texturePath.string() + "\n";
+            REDCLONE_LOG_ERROR(std::string("Texture load failed: ") + texturePath.string());
             continue;
         }
+        REDCLONE_LOG_DEBUG(std::string("Texture load success: ") + texturePath.string());
 
         out.registerSheet(std::move(sheet), std::move(texture));
     }
+
+    REDCLONE_LOG_INFO(std::string("Tile sheets loaded: ") + std::to_string(out.sheetCount()));
+    REDCLONE_LOG_INFO(std::string("Tiles registered: ") + std::to_string(out.tileCount()));
+    REDCLONE_LOG_INFO(std::string("Contains grass_raised_067: ") + (out.containsTile("grass_raised_067") ? "yes" : "no"));
 
     if (!combinedErrors.empty())
     {

@@ -135,5 +135,9 @@ target_include_directories(RedClone PRIVATE
     ${mathfu_SOURCE_DIR}/dependencies/vectorial/include
 )
 target_link_libraries(RedClone PRIVATE SFML::Graphics SFML::Window SFML::System Lua::Lua LuaCxx::LuaCxx)
+target_compile_definitions(RedClone PRIVATE
+    REDCLONE_ASSET_DIR="${CMAKE_SOURCE_DIR}/assets"
+    $<$<CONFIG:Debug>:REDCLONE_DEBUG_LOGS=1>
+)
 
 add_subdirectory(tests)

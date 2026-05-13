@@ -79,6 +79,9 @@ class TileAssetRegistry
     void registerSheet(TileSheetDefinition sheet, std::shared_ptr<sf::Texture> texture = nullptr);
     const TileDefinition* findTile(std::string_view name) const;
     TileLookup findTileWithTexture(std::string_view name) const;
+    [[nodiscard]] std::size_t sheetCount() const;
+    [[nodiscard]] std::size_t tileCount() const;
+    [[nodiscard]] bool containsTile(std::string_view name) const;
 
   private:
     struct SheetRecord

@@ -1,4 +1,5 @@
 #include "world/TileMapRenderer.h"
+#include "core/Logger.h"
 
 #include "engine/math/Isometric.h"
 
@@ -15,6 +16,21 @@ void TileMapRenderer::render(engine::rendering::IRenderer& renderer, const TileM
                              const gameplay::SelectionController& selectionController) const
 {
     const auto defaultLookup = m_TileAssets ? m_TileAssets->findTileWithTexture(c_DefaultTileName) : engine::assets::TileLookup{};
+    if (defaultLookup.tile == nullptr && !m_LoggedMissingDefault)
+    {
+        REDCLONE_LOG_WARNING("TileMapRenderer missing default tile grass_raised_067.");
+        m_LoggedMissingDefault = true;
+    }
+    if (defaultLookup.tile != nullptr && defaultLookup.texture != nullptr && !m_LoggedTexturedPath)
+    {
+        REDCLONE_LOG_INFO("TileMapRenderer using textured tile rendering for grass_raised_067.");
+        m_LoggedTexturedPath = true;
+    }
+    if ((defaultLookup.tile == nullptr || defaultLookup.texture == nullptr) && !m_LoggedPrimitiveFallback)
+    {
+        REDCLONE_LOG_WARNING("TileMapRenderer falling back to primitive diamond rendering.");
+        m_LoggedPrimitiveFallback = true;
+    }
 
     for (int y = 0; y < TileMap::c_Height; ++y)
     {
