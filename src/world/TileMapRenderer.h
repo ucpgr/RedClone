@@ -16,5 +16,8 @@ class TileMapRenderer
   private:
     static constexpr const char* c_DefaultTileName = "grass_raised_067";
     const engine::assets::TileAssetRegistry* m_TileAssets = nullptr;
+    mutable bool m_LoggedMissingDefault = false;
+    mutable bool m_LoggedTexturedPath = false;
+    mutable bool m_LoggedPrimitiveFallback = false;
 };
 } // namespace redclone::world

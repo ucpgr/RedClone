@@ -1,4 +1,5 @@
 #include "world/World.h"
+#include "core/Logger.h"
 
 #include "engine/math/Isometric.h"
 
@@ -6,6 +7,7 @@
 #include <array>
 #include <cmath>
 #include <vector>
+#include <string>
 
 namespace redclone::world
 {
@@ -26,6 +28,7 @@ void World::spawnTestUnits()
         const auto id = m_EntityManager.createEntity();
         m_EntityManager.addTransform(id, {{8.0F + static_cast<float>(i), 8.0F + static_cast<float>(i)}});
         m_EntityManager.addUnit(id, {80.0F, 100.0F, i % 2});
+        REDCLONE_LOG_DEBUG(std::string("Spawned test unit entity=") + std::to_string(id));
     }
 }
 
@@ -126,9 +129,11 @@ void World::selectUnitAt(const engine::math::Vec2f& worldPosition)
         if (length(delta) <= c_SelectionRadius)
         {
             m_EntityManager.addSelection(entityId, {});
+            REDCLONE_LOG_DEBUG(std::string("Unit selected entity=") + std::to_string(entityId));
             return;
         }
     }
+    REDCLONE_LOG_DEBUG("Unit selection failed.");
 }
 
 void World::clearUnitSelection()
@@ -150,6 +155,8 @@ void World::issueMoveCommandToSelected(const engine::math::Vec2f& destination)
         if (m_EntityManager.hasTransform(entityId) && m_EntityManager.hasUnit(entityId))
         {
             m_EntityManager.addMoveTarget(entityId, {destination});
+            REDCLONE_LOG_DEBUG(std::string("Move command entity=") + std::to_string(entityId) + " destination=(" +
+                               std::to_string(destination[0]) + "," + std::to_string(destination[1]) + ")");
         }
     }
 }

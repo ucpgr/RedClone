@@ -1,22 +1,30 @@
 #include "core/Application.h"
+#include "core/Logger.h"
 
 #include <SFML/System/Clock.hpp>
 
 #include "engine/assets/TileAssetLoader.h"
 #include "engine/math/Isometric.h"
-#include <iostream>
-
 #include <algorithm>
 
 namespace redclone::core
 {
 Application::Application() : m_Renderer(m_Window), m_InputAdapter(m_Window, m_InputSystem)
 {
+    REDCLONE_LOG_INFO("Application startup.");
+#ifndef REDCLONE_ASSET_DIR
+#define REDCLONE_ASSET_DIR "assets"
+#endif
+    const std::string tileAssetDirectory = std::string(REDCLONE_ASSET_DIR) + "/tiles";
+    REDCLONE_LOG_INFO(std::string("Configured asset directory: ") + REDCLONE_ASSET_DIR);
+
     std::string tileAssetError;
-    if (!engine::assets::TileAssetLoader::loadDirectory("assets/tiles", m_TileAssets, tileAssetError))
+    if (!engine::assets::TileAssetLoader::loadDirectory(tileAssetDirectory, m_TileAssets, tileAssetError))
     {
-        std::cerr << "Tile assets failed to load: " << tileAssetError << "\n";
+        REDCLONE_LOG_WARNING(std::string("Tile assets failed to load: ") + tileAssetError);
     }
+    REDCLONE_LOG_INFO(std::string("Tile asset result: sheets=") + std::to_string(m_TileAssets.sheetCount()) +
+                      ", tiles=" + std::to_string(m_TileAssets.tileCount()));
     m_TileMapRenderer.setTileAssets(&m_TileAssets);
     m_InputSystem.addObserver(*this);
     m_Camera.setViewportSize({1280.0F, 720.0F});
@@ -79,6 +87,10 @@ void Application::onInputEvent(const engine::input::InputEvent& event)
         const auto renderPosition = m_Camera.screenToWorld(
             {static_cast<float>(event.mousePosition[0]), static_cast<float>(event.mousePosition[1])});
         const auto worldPosition = engine::math::isometric::isoToWorld(renderPosition);
+        REDCLONE_LOG_DEBUG(std::string("Mouse press screen(") + std::to_string(event.mousePosition[0]) + "," +
+                           std::to_string(event.mousePosition[1]) + ") iso(" + std::to_string(renderPosition[0]) +
+                           "," + std::to_string(renderPosition[1]) + ") world(" + std::to_string(worldPosition[0]) +
+                           "," + std::to_string(worldPosition[1]) + ")");
 
         if (event.mouseButton == MouseButton::Left)
         {

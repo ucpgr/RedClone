@@ -6,6 +6,7 @@ int runEcsTests();
 int runWorldTests();
 int runIsometricTests();
 int runScriptEngineTests();
+int runLoggerTests();
 int runTileAssetRegistryTests();
 int runTileAssetMetadataTests();
 int runTileConnectorTests();
@@ -41,6 +42,10 @@ int main()
         return 1;
     }
     if (runScriptEngineTests() != 0)
+    {
+        return 1;
+    }
+    if (runLoggerTests() != 0)
     {
         return 1;
     }

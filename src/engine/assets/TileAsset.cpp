@@ -37,4 +37,13 @@ TileLookup TileAssetRegistry::findTileWithTexture(std::string_view name) const
 
     return {&record.definition.tiles[tileIndex], record.texture.get()};
 }
+
+std::size_t TileAssetRegistry::sheetCount() const { return m_Sheets.size(); }
+
+std::size_t TileAssetRegistry::tileCount() const { return m_ByName.size(); }
+
+bool TileAssetRegistry::containsTile(std::string_view name) const
+{
+    return m_ByName.contains(std::string(name));
+}
 } // namespace redclone::engine::assets

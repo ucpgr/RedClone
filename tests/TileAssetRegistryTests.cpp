@@ -27,5 +27,18 @@ int runTileAssetRegistryTests()
         return 1;
     }
 
+    if (reg.sheetCount() != 2 || reg.tileCount() != 2 || !reg.containsTile("other") || reg.containsTile("missing"))
+    {
+        std::cerr << "registry helper counts/contains failed\n";
+        return 1;
+    }
+
+    const auto missing = reg.findTileWithTexture("grass_raised_067");
+    if (missing.tile != nullptr || missing.texture != nullptr)
+    {
+        std::cerr << "missing default tile should return empty lookup\n";
+        return 1;
+    }
+
     return 0;
 }
