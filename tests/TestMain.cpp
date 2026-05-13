@@ -6,7 +6,9 @@ int runEcsTests();
 int runWorldTests();
 int runIsometricTests();
 int runScriptEngineTests();
-int runTileAssetTests();
+int runTileAssetRegistryTests();
+int runTileAssetMetadataTests();
+int runTileConnectorTests();
 
 int main()
 {
@@ -43,7 +45,15 @@ int main()
         return 1;
     }
 
-    if (runTileAssetTests() != 0)
+    if (runTileAssetRegistryTests() != 0)
+    {
+        return 1;
+    }
+    if (runTileAssetMetadataTests() != 0)
+    {
+        return 1;
+    }
+    if (runTileConnectorTests() != 0)
     {
         return 1;
     }

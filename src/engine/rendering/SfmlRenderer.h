@@ -29,6 +29,8 @@ class SfmlRenderer final : public IRenderer
                           const Color& outlineColor, float outlineThickness) override;
     void drawConvexPolygon(std::span<const math::Vec2f> points, const Color& fillColor,
                            const Color& outlineColor, float outlineThickness) override;
+    void drawTexturedSprite(const sf::Texture& texture, const math::IntRect& sourceRect,
+                            const math::Vec2f& worldPosition) override;
 
   private:
     static auto toSfmlColor(const Color& color);
