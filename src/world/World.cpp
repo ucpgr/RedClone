@@ -154,6 +154,18 @@ void World::issueMoveCommandToSelected(const engine::math::Vec2f& destination)
     }
 }
 
+bool World::hasSelectedUnits() const
+{
+    for (const auto entityId : m_EntityManager.getAliveEntities())
+    {
+        if (m_EntityManager.hasSelection(entityId))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 ecs::EntityManager& World::getEntityManager() { return m_EntityManager; }
 const ecs::EntityManager& World::getEntityManager() const { return m_EntityManager; }
 } // namespace redclone::world

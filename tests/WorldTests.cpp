@@ -1,6 +1,16 @@
 #include "world/World.h"
 
+#include <cmath>
 #include <iostream>
+
+namespace
+{
+float distance(const redclone::engine::math::Vec2f& a, const redclone::engine::math::Vec2f& b)
+{
+    const auto delta = b - a;
+    return std::sqrt((delta[0] * delta[0]) + (delta[1] * delta[1]));
+}
+}
 
 int runWorldTests()
 {
@@ -30,6 +40,12 @@ int runWorldTests()
     }
 
     world.selectUnitAt(selectedTransform->position);
+    if (!world.hasSelectedUnits())
+    {
+        std::cerr << "Selecting a unit should mark selection state in world\n";
+        return 1;
+    }
+
     world.issueMoveCommandToSelected({500.0F, 500.0F});
     if (!ecs.hasMoveTarget(selected))
     {
@@ -43,19 +59,47 @@ int runWorldTests()
     }
 
     const auto start = selectedTransform->position;
+    const redclone::engine::math::Vec2f farDestination{500.0F, 500.0F};
+    const float startDistanceToFarDestination = distance(start, farDestination);
     world.update(0.1F);
     const auto after = ecs.getTransform(selected)->position;
-    if (after[0] <= start[0] && after[1] <= start[1])
+    if (distance(start, after) <= 0.0F)
     {
-        std::cerr << "Unit did not move toward destination\n";
+        std::cerr << "Unit position should change after world update\n";
+        return 1;
+    }
+    if (distance(after, farDestination) >= startDistanceToFarDestination)
+    {
+        std::cerr << "Unit should move closer to destination after update\n";
         return 1;
     }
 
-    ecs.addMoveTarget(selected, {after + redclone::engine::math::Vec2f(1.0F, 0.0F)});
+    const auto nearDestination = after + redclone::engine::math::Vec2f(1.0F, 0.0F);
+    ecs.addMoveTarget(selected, {nearDestination});
     world.update(1.0F);
+    const auto afterNearMove = ecs.getTransform(selected)->position;
+    if (distance(afterNearMove, nearDestination) > 0.001F)
+    {
+        std::cerr << "Unit should not overshoot nearby destination\n";
+        return 1;
+    }
     if (ecs.hasMoveTarget(selected))
     {
         std::cerr << "Unit should stop at destination without overshoot\n";
+        return 1;
+    }
+
+    world.clearUnitSelection();
+    if (world.hasSelectedUnits())
+    {
+        std::cerr << "Clearing selection should remove world selection state\n";
+        return 1;
+    }
+
+    world.issueMoveCommandToSelected({10.0F, 10.0F});
+    if (ecs.hasMoveTarget(selected) || (unselected != 0 && ecs.hasMoveTarget(unselected)))
+    {
+        std::cerr << "Move command without selection should not assign move targets\n";
         return 1;
     }
 

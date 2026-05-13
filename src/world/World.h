@@ -17,6 +17,7 @@ class World
     void selectUnitAt(const engine::math::Vec2f& worldPosition);
     void clearUnitSelection();
     void issueMoveCommandToSelected(const engine::math::Vec2f& destination);
+    [[nodiscard]] bool hasSelectedUnits() const;
 
     [[nodiscard]] ecs::EntityManager& getEntityManager();
     [[nodiscard]] const ecs::EntityManager& getEntityManager() const;

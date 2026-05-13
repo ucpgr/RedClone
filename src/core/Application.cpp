@@ -30,10 +30,10 @@ int Application::run()
 
         m_InputAdapter.pollEvents();
         m_CameraController.update(m_Camera, deltaSeconds);
+        m_World.update(deltaSeconds);
 
         m_Renderer.beginFrame();
         m_Renderer.setCamera(m_Camera);
-        m_World.update(deltaSeconds);
 
         m_TileMapRenderer.render(m_Renderer, m_TileMap, m_SelectionController);
         m_World.render(m_Renderer);
@@ -75,17 +75,7 @@ void Application::onInputEvent(const engine::input::InputEvent& event)
         if (event.mouseButton == MouseButton::Left)
         {
             m_World.selectUnitAt(worldPosition);
-            const bool hasSelectedUnit = [&]()
-            {
-                for (const auto entityId : m_World.getEntityManager().getAliveEntities())
-                {
-                    if (m_World.getEntityManager().hasSelection(entityId))
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }();
+            const bool hasSelectedUnit = m_World.hasSelectedUnits();
 
             if (!hasSelectedUnit)
             {

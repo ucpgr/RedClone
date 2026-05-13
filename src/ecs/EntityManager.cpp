@@ -22,6 +22,10 @@ bool EntityManager::isAlive(const EntityId entityId) const { return m_AliveEntit
 
 void EntityManager::addTransform(const EntityId entityId, const TransformComponent& component)
 {
+    if (!isAlive(entityId))
+    {
+        return;
+    }
     m_Transforms[entityId] = component;
 }
 bool EntityManager::hasTransform(const EntityId entityId) const { return m_Transforms.contains(entityId); }
@@ -43,7 +47,14 @@ const TransformComponent* EntityManager::getTransform(const EntityId entityId) c
 }
 void EntityManager::removeTransform(const EntityId entityId) { m_Transforms.erase(entityId); }
 
-void EntityManager::addUnit(const EntityId entityId, const UnitComponent& component) { m_Units[entityId] = component; }
+void EntityManager::addUnit(const EntityId entityId, const UnitComponent& component)
+{
+    if (!isAlive(entityId))
+    {
+        return;
+    }
+    m_Units[entityId] = component;
+}
 bool EntityManager::hasUnit(const EntityId entityId) const { return m_Units.contains(entityId); }
 const UnitComponent* EntityManager::getUnit(const EntityId entityId) const
 {
@@ -57,6 +68,10 @@ void EntityManager::removeUnit(const EntityId entityId) { m_Units.erase(entityId
 
 void EntityManager::addSelection(const EntityId entityId, const SelectionComponent& component)
 {
+    if (!isAlive(entityId))
+    {
+        return;
+    }
     m_Selections[entityId] = component;
 }
 bool EntityManager::hasSelection(const EntityId entityId) const { return m_Selections.contains(entityId); }
@@ -64,6 +79,10 @@ void EntityManager::removeSelection(const EntityId entityId) { m_Selections.eras
 
 void EntityManager::addMoveTarget(const EntityId entityId, const MoveTargetComponent& component)
 {
+    if (!isAlive(entityId))
+    {
+        return;
+    }
     m_MoveTargets[entityId] = component;
 }
 bool EntityManager::hasMoveTarget(const EntityId entityId) const { return m_MoveTargets.contains(entityId); }
