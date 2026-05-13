@@ -8,7 +8,9 @@ add_executable(RedCloneTests
     WorldTests.cpp
     IsometricTests.cpp
     ScriptEngineTests.cpp
-    TileAssetTests.cpp
+    TileAssetRegistryTests.cpp
+    TileAssetMetadataTests.cpp
+    TileConnectorTests.cpp
 )
 
 target_include_directories(RedCloneTests PRIVATE
