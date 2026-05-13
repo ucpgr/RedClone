@@ -115,13 +115,9 @@ bool TileAssetLoader::loadMetadataFile(const std::string& filePath, TileSheetDef
             tile.w = reqInt(L, -1, "w");
             tile.h = reqInt(L, -1, "h");
             if (tile.x < 0 || tile.y < 0 || tile.w <= 0 || tile.h <= 0)
-<<<<<<< HEAD
             {
                 throw std::runtime_error("invalid source rectangle for tile: " + tile.name);
             }
-=======
-                throw std::runtime_error("invalid source rectangle for tile: " + tile.name);
->>>>>>> a0c40c4 (Add tilesheet texture assets with renderer fallback)
 
             if (tile.kind == TileKind::Flat)
             {
@@ -154,54 +150,35 @@ bool TileAssetLoader::loadDirectory(const std::string& directoryPath, TileAssetR
     namespace fs = std::filesystem;
     if (!fs::exists(directoryPath)) return true;
 
-<<<<<<< HEAD
     std::string combinedErrors;
-=======
->>>>>>> a0c40c4 (Add tilesheet texture assets with renderer fallback)
     for (const auto& entry : fs::directory_iterator(directoryPath))
     {
         if (!entry.is_regular_file() || entry.path().extension() != ".lua") continue;
 
         TileSheetDefinition sheet;
-<<<<<<< HEAD
         std::string localError;
         if (!loadMetadataFile(entry.path().string(), sheet, localError))
         {
             combinedErrors += "metadata parse failed for '" + entry.path().string() + "': " + localError + "\n";
             continue;
-=======
-        if (!loadMetadataFile(entry.path().string(), sheet, error))
-        {
-            error = "metadata parse failed for '" + entry.path().string() + "': " + error;
-            return false;
->>>>>>> a0c40c4 (Add tilesheet texture assets with renderer fallback)
         }
 
         const fs::path texturePath = entry.path().parent_path() / sheet.sheet;
         auto texture = std::make_shared<sf::Texture>();
         if (!texture->loadFromFile(texturePath.string()))
         {
-<<<<<<< HEAD
             combinedErrors += "failed to load texture for metadata '" + entry.path().string() + "': " + texturePath.string() + "\n";
             continue;
-=======
-            error = "failed to load texture for metadata '" + entry.path().string() + "': " + texturePath.string();
-            return false;
->>>>>>> a0c40c4 (Add tilesheet texture assets with renderer fallback)
         }
 
         out.registerSheet(std::move(sheet), std::move(texture));
     }
 
-<<<<<<< HEAD
     if (!combinedErrors.empty())
     {
         error = combinedErrors;
         return false;
     }
-
-=======
->>>>>>> a0c40c4 (Add tilesheet texture assets with renderer fallback)
     return true;
 }
 } // namespace redclone::engine::assets
