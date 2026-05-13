@@ -12,5 +12,6 @@ enum class TileType
 struct Tile
 {
     TileType type{TileType::Grass};
+    int height{0};
 };
 } // namespace redclone::world

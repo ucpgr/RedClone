@@ -40,4 +40,27 @@ std::optional<TileType> TileMap::getTileTypeAt(const engine::math::Vec2i& coord)
     const auto index = static_cast<std::size_t>((coord[1] * c_Width) + coord[0]);
     return m_Tiles[index].type;
 }
+
+std::optional<int> TileMap::getTileHeightAt(const engine::math::Vec2i& coord) const
+{
+    if (coord[0] < 0 || coord[1] < 0 || coord[0] >= c_Width || coord[1] >= c_Height)
+    {
+        return std::nullopt;
+    }
+
+    const auto index = static_cast<std::size_t>((coord[1] * c_Width) + coord[0]);
+    return m_Tiles[index].height;
+}
+
+bool TileMap::setTileHeightAt(const engine::math::Vec2i& coord, const int height)
+{
+    if (coord[0] < 0 || coord[1] < 0 || coord[0] >= c_Width || coord[1] >= c_Height)
+    {
+        return false;
+    }
+
+    const auto index = static_cast<std::size_t>((coord[1] * c_Width) + coord[0]);
+    m_Tiles[index].height = height;
+    return true;
+}
 } // namespace redclone::world
