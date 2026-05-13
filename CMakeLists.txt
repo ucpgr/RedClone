@@ -11,6 +11,7 @@ FetchContent_Declare(sfml GIT_REPOSITORY https://github.com/SFML/SFML.git GIT_TA
 set(SFML_BUILD_NETWORK OFF CACHE BOOL "" FORCE)
 set(SFML_BUILD_AUDIO OFF CACHE BOOL "" FORCE)
 set(SFML_USE_UDEV OFF CACHE BOOL "" FORCE)
+set(SFML_USE_DRM OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(sfml)
 
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
@@ -122,6 +123,9 @@ set(REDCLONE_SOURCES
     src/world/TileMapGenerator.cpp
     src/world/TileMapRenderer.cpp
     src/world/World.cpp
+    src/engine/assets/TileAsset.cpp
+    src/engine/assets/TileAssetLoader.cpp
+    src/engine/assets/TileConnector.cpp
 )
 
 add_executable(RedClone ${REDCLONE_SOURCES})

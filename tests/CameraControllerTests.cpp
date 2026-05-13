@@ -14,6 +14,11 @@ int runCameraControllerTests()
     press.key = redclone::engine::input::Key::W;
     controller.onInputEvent(press);
 
+    redclone::engine::input::InputEvent release{};
+    release.type = redclone::engine::input::InputEventType::KeyReleased;
+    release.key = redclone::engine::input::Key::W;
+    controller.onInputEvent(release);
+
     redclone::engine::input::InputEvent pressEscape{};
     pressEscape.type = redclone::engine::input::InputEventType::KeyPressed;
     pressEscape.key = redclone::engine::input::Key::Escape;
@@ -27,6 +32,12 @@ int runCameraControllerTests()
         std::cerr << "CameraController non-movement key handling failed\n";
         return 1;
     }
+
+
+    redclone::engine::input::InputEvent pressAgain{};
+    pressAgain.type = redclone::engine::input::InputEventType::KeyPressed;
+    pressAgain.key = redclone::engine::input::Key::W;
+    controller.onInputEvent(pressAgain);
 
     redclone::engine::camera::Camera2D moveCamera;
     moveCamera.setPosition({0.0F, 0.0F});
