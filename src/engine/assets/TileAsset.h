@@ -1,15 +1,12 @@
 #pragma once
 
+#include <SFML/Graphics/Texture.hpp>
+
 #include <memory>
 #include <string>
 #include <string_view>
 #include <unordered_map>
 #include <vector>
-
-namespace sf
-{
-class Texture;
-}
 
 namespace redclone::engine::assets
 {
