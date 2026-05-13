@@ -4,6 +4,7 @@ int runSelectionControllerTests();
 int runCameraControllerTests();
 int runEcsTests();
 int runWorldTests();
+int runIsometricTests();
 
 int main()
 {
@@ -28,6 +29,10 @@ int main()
         return 1;
     }
     if (runWorldTests() != 0)
+    {
+        return 1;
+    }
+    if (runIsometricTests() != 0)
     {
         return 1;
     }

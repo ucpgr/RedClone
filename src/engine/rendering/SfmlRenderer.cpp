@@ -3,6 +3,7 @@
 #include "engine/window/Window.h"
 
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/ConvexShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/View.hpp>
 
@@ -50,5 +51,20 @@ void SfmlRenderer::drawOutlinedRect(const math::Vec2f& worldPosition, const math
     rectangle.setOutlineColor(toSfmlColor(outlineColor));
     rectangle.setOutlineThickness(outlineThickness);
     m_Window.nativeWindow().draw(rectangle);
+}
+
+void SfmlRenderer::drawConvexPolygon(std::span<const math::Vec2f> points, const Color& fillColor,
+                                     const Color& outlineColor, const float outlineThickness)
+{
+    sf::ConvexShape polygon;
+    polygon.setPointCount(points.size());
+    for (std::size_t i = 0; i < points.size(); ++i)
+    {
+        polygon.setPoint(i, {points[i][0], points[i][1]});
+    }
+    polygon.setFillColor(toSfmlColor(fillColor));
+    polygon.setOutlineColor(toSfmlColor(outlineColor));
+    polygon.setOutlineThickness(outlineThickness);
+    m_Window.nativeWindow().draw(polygon);
 }
 } // namespace redclone::engine::rendering

@@ -2,6 +2,8 @@
 
 #include "engine/rendering/IRenderer.h"
 
+#include <span>
+
 namespace sf
 {
 class RenderWindow;
@@ -25,6 +27,8 @@ class SfmlRenderer final : public IRenderer
                         const Color& color) override;
     void drawOutlinedRect(const math::Vec2f& worldPosition, const math::Vec2f& size, const Color& fillColor,
                           const Color& outlineColor, float outlineThickness) override;
+    void drawConvexPolygon(std::span<const math::Vec2f> points, const Color& fillColor,
+                           const Color& outlineColor, float outlineThickness) override;
 
   private:
     static auto toSfmlColor(const Color& color);

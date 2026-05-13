@@ -1,13 +1,14 @@
 #include "world/TileMapRenderer.h"
 
+#include "engine/math/Isometric.h"
+
+#include <array>
+
 namespace redclone::world
 {
 void TileMapRenderer::render(engine::rendering::IRenderer& renderer, const TileMap& tileMap,
                              const gameplay::SelectionController& selectionController) const
 {
-    const engine::math::Vec2f tileSize(static_cast<float>(TileMap::c_TileSize),
-                                       static_cast<float>(TileMap::c_TileSize));
-
     for (int y = 0; y < TileMap::c_Height; ++y)
     {
         for (int x = 0; x < TileMap::c_Width; ++x)
@@ -28,17 +29,31 @@ void TileMapRenderer::render(engine::rendering::IRenderer& renderer, const TileM
                 tileColor = {80, 80, 80, 255};
             }
 
-            renderer.drawOutlinedRect(
-                {static_cast<float>(x * TileMap::c_TileSize), static_cast<float>(y * TileMap::c_TileSize)},
-                tileSize, tileColor, {30, 30, 30, 255}, -1.0F);
+            const auto center = engine::math::isometric::tileToIso({x, y});
+            const float halfWidth = engine::math::isometric::c_TileWidth * 0.5F;
+            const float halfHeight = engine::math::isometric::c_TileHeight * 0.5F;
+            const std::array points = {
+                engine::math::Vec2f{center[0], center[1] - halfHeight},
+                engine::math::Vec2f{center[0] + halfWidth, center[1]},
+                engine::math::Vec2f{center[0], center[1] + halfHeight},
+                engine::math::Vec2f{center[0] - halfWidth, center[1]},
+            };
+            renderer.drawConvexPolygon(points, tileColor, {30, 30, 30, 255}, -1.0F);
         }
     }
 
     if (const auto selected = selectionController.getSelectedTile())
     {
-        renderer.drawOutlinedRect({static_cast<float>((*selected)[0] * TileMap::c_TileSize),
-                                   static_cast<float>((*selected)[1] * TileMap::c_TileSize)},
-                                  tileSize, {0, 0, 0, 0}, {255, 255, 0, 255}, -3.0F);
+        const auto center = engine::math::isometric::tileToIso(*selected);
+        const float halfWidth = engine::math::isometric::c_TileWidth * 0.5F;
+        const float halfHeight = engine::math::isometric::c_TileHeight * 0.5F;
+        const std::array points = {
+            engine::math::Vec2f{center[0], center[1] - halfHeight},
+            engine::math::Vec2f{center[0] + halfWidth, center[1]},
+            engine::math::Vec2f{center[0], center[1] + halfHeight},
+            engine::math::Vec2f{center[0] - halfWidth, center[1]},
+        };
+        renderer.drawConvexPolygon(points, {0, 0, 0, 0}, {255, 255, 0, 255}, -3.0F);
     }
 }
 } // namespace redclone::world

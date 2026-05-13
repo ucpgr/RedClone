@@ -38,6 +38,7 @@ set(REDCLONE_SOURCES
     src/engine/camera/Camera2D.cpp
     src/engine/input/InputSystem.cpp
     src/engine/input/SfmlInputAdapter.cpp
+    src/engine/math/Isometric.cpp
     src/engine/Renderer.cpp
     src/engine/rendering/SfmlRenderer.cpp
     src/engine/window/Window.cpp

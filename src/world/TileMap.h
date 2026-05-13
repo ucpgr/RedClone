@@ -14,7 +14,6 @@ class TileMap
   public:
     static constexpr int c_Width = 64;
     static constexpr int c_Height = 64;
-    static constexpr int c_TileSize = 32;
 
     TileMap();
 
