@@ -34,6 +34,6 @@ target_sources(RedCloneTests PRIVATE
     ${CMAKE_SOURCE_DIR}/src/engine/assets/TileConnector.cpp
 )
 
-target_link_libraries(RedCloneTests PRIVATE Lua::Lua LuaCxx::LuaCxx)
+target_link_libraries(RedCloneTests PRIVATE Lua::Lua LuaCxx::LuaCxx SFML::Graphics SFML::Window SFML::System)
 
 add_test(NAME RedCloneTests COMMAND RedCloneTests)
