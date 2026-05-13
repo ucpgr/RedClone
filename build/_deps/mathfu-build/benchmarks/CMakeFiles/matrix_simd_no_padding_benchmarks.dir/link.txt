@@ -1,1 +1,0 @@
-/usr/bin/c++  -std=c++0x -Wall -pedantic -Werror -Wextra -Wno-unused-function -Wno-deprecated-declarations -Wl,--dependency-file=CMakeFiles/matrix_simd_no_padding_benchmarks.dir/link.d CMakeFiles/matrix_simd_no_padding_benchmarks.dir/matrix_benchmark/main.cpp.o -o matrix_simd_no_padding_benchmarks  -lrt

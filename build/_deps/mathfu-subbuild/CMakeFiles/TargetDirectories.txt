@@ -1,3 +1,0 @@
-/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/CMakeFiles/mathfu-populate.dir
-/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/CMakeFiles/edit_cache.dir
-/home/dan/CLionProjects/RedClone/build/_deps/mathfu-subbuild/CMakeFiles/rebuild_cache.dir
