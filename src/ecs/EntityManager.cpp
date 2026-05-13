@@ -45,7 +45,7 @@ void EntityManager::removeTransform(const EntityId entityId) { m_Transforms.eras
 
 void EntityManager::addUnit(const EntityId entityId, const UnitComponent& component) { m_Units[entityId] = component; }
 bool EntityManager::hasUnit(const EntityId entityId) const { return m_Units.contains(entityId); }
-UnitComponent* EntityManager::getUnit(const EntityId entityId)
+const UnitComponent* EntityManager::getUnit(const EntityId entityId) const
 {
     if (const auto it = m_Units.find(entityId); it != m_Units.end())
     {

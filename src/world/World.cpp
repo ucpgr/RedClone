@@ -62,7 +62,7 @@ void World::update(const float deltaSeconds)
 
 void World::render(engine::rendering::IRenderer& renderer) const
 {
-    constexpr engine::math::Vec2f unitSize{18.0F, 18.0F};
+    const engine::math::Vec2f unitSize{18.0F, 18.0F};
     for (const auto entityId : m_EntityManager.getAliveEntities())
     {
         const auto* transform = m_EntityManager.getTransform(entityId);

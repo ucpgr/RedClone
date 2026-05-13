@@ -48,7 +48,7 @@ class EntityManager
 
     void addUnit(EntityId entityId, const UnitComponent& component);
     [[nodiscard]] bool hasUnit(EntityId entityId) const;
-    [[nodiscard]] UnitComponent* getUnit(EntityId entityId);
+    [[nodiscard]] const UnitComponent* getUnit(EntityId entityId) const;
     void removeUnit(EntityId entityId);
 
     void addSelection(EntityId entityId, const SelectionComponent& component = {});
