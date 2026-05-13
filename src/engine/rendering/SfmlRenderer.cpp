@@ -5,6 +5,7 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/ConvexShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/View.hpp>
 
 namespace redclone::engine::rendering
@@ -66,5 +67,13 @@ void SfmlRenderer::drawConvexPolygon(std::span<const math::Vec2f> points, const 
     polygon.setOutlineColor(toSfmlColor(outlineColor));
     polygon.setOutlineThickness(outlineThickness);
     m_Window.nativeWindow().draw(polygon);
+}
+
+void SfmlRenderer::drawTexturedSprite(const sf::Texture& texture, const math::IntRect& sourceRect,
+                                     const math::Vec2f& worldPosition)
+{
+    sf::Sprite sprite(texture, sf::IntRect({sourceRect.x, sourceRect.y}, {sourceRect.width, sourceRect.height}));
+    sprite.setPosition({worldPosition[0], worldPosition[1]});
+    m_Window.nativeWindow().draw(sprite);
 }
 } // namespace redclone::engine::rendering

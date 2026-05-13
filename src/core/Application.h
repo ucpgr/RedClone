@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/CameraController.h"
+#include "engine/assets/TileAsset.h"
 #include "engine/camera/Camera2D.h"
 #include "engine/input/IInputObserver.h"
 #include "engine/input/InputSystem.h"
@@ -36,5 +37,6 @@ class Application final : public engine::input::IInputObserver
     world::TileMapRenderer m_TileMapRenderer;
     gameplay::SelectionController m_SelectionController;
     world::World m_World;
+    engine::assets::TileAssetRegistry m_TileAssets;
 };
 } // namespace redclone::core

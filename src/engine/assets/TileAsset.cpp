@@ -2,24 +2,39 @@
 
 namespace redclone::engine::assets
 {
-void TileAssetRegistry::registerSheet(TileSheetDefinition sheet)
+void TileAssetRegistry::registerSheet(TileSheetDefinition sheet, std::shared_ptr<sf::Texture> texture)
 {
-    m_Sheets.push_back(std::move(sheet));
-    auto& storedSheet = m_Sheets.back();
-    for (auto& tile : storedSheet.tiles)
+    const std::size_t sheetIndex = m_Sheets.size();
+    m_Sheets.push_back({std::move(sheet), std::move(texture)});
+
+    const auto& tiles = m_Sheets.back().definition.tiles;
+    for (std::size_t tileIndex = 0; tileIndex < tiles.size(); ++tileIndex)
     {
-        m_ByName[tile.name] = &tile;
+        m_ByName[tiles[tileIndex].name] = {sheetIndex, tileIndex};
     }
 }
 
 const TileDefinition* TileAssetRegistry::findTile(std::string_view name) const
 {
+    const auto lookup = findTileWithTexture(name);
+    return lookup.tile;
+}
+
+TileLookup TileAssetRegistry::findTileWithTexture(std::string_view name) const
+{
     const auto it = m_ByName.find(std::string(name));
     if (it == m_ByName.end())
     {
-        return nullptr;
+        return {};
     }
 
-    return it->second;
+    const auto [sheetIndex, tileIndex] = it->second;
+    const auto& record = m_Sheets.at(sheetIndex);
+    if (tileIndex >= record.definition.tiles.size())
+    {
+        return {};
+    }
+
+    return {&record.definition.tiles[tileIndex], record.texture.get()};
 }
 } // namespace redclone::engine::assets
