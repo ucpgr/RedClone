@@ -8,6 +8,7 @@ add_executable(RedCloneTests
     WorldTests.cpp
     IsometricTests.cpp
     ScriptEngineTests.cpp
+    TileAssetTests.cpp
 )
 
 target_include_directories(RedCloneTests PRIVATE
@@ -26,6 +27,9 @@ target_sources(RedCloneTests PRIVATE
     ${CMAKE_SOURCE_DIR}/src/ecs/EntityManager.cpp
     ${CMAKE_SOURCE_DIR}/src/world/World.cpp
     ${CMAKE_SOURCE_DIR}/src/scripting/ScriptEngine.cpp
+    ${CMAKE_SOURCE_DIR}/src/engine/assets/TileAsset.cpp
+    ${CMAKE_SOURCE_DIR}/src/engine/assets/TileAssetLoader.cpp
+    ${CMAKE_SOURCE_DIR}/src/engine/assets/TileConnector.cpp
 )
 
 target_link_libraries(RedCloneTests PRIVATE Lua::Lua LuaCxx::LuaCxx)

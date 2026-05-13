@@ -6,6 +6,7 @@ int runEcsTests();
 int runWorldTests();
 int runIsometricTests();
 int runScriptEngineTests();
+int runTileAssetTests();
 
 int main()
 {
@@ -38,6 +39,11 @@ int main()
         return 1;
     }
     if (runScriptEngineTests() != 0)
+    {
+        return 1;
+    }
+
+    if (runTileAssetTests() != 0)
     {
         return 1;
     }
