@@ -9,6 +9,11 @@
 
 #include <span>
 
+namespace sf
+{
+class Texture;
+}
+
 namespace redclone::engine::rendering
 {
 class IRenderer

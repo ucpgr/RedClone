@@ -1,5 +1,7 @@
 #include "engine/assets/TileAssetLoader.h"
 
+#include <SFML/Graphics/Texture.hpp>
+
 #include <filesystem>
 #include <unordered_set>
 
@@ -119,7 +121,7 @@ bool TileAssetLoader::loadMetadataFile(const std::string& filePath, TileSheetDef
             }
 =======
                 throw std::runtime_error("invalid source rectangle for tile: " + tile.name);
->>>>>>> main
+>>>>>>> a0c40c4 (Add tilesheet texture assets with renderer fallback)
 
             if (tile.kind == TileKind::Flat)
             {
@@ -155,7 +157,7 @@ bool TileAssetLoader::loadDirectory(const std::string& directoryPath, TileAssetR
 <<<<<<< HEAD
     std::string combinedErrors;
 =======
->>>>>>> main
+>>>>>>> a0c40c4 (Add tilesheet texture assets with renderer fallback)
     for (const auto& entry : fs::directory_iterator(directoryPath))
     {
         if (!entry.is_regular_file() || entry.path().extension() != ".lua") continue;
@@ -172,7 +174,7 @@ bool TileAssetLoader::loadDirectory(const std::string& directoryPath, TileAssetR
         {
             error = "metadata parse failed for '" + entry.path().string() + "': " + error;
             return false;
->>>>>>> main
+>>>>>>> a0c40c4 (Add tilesheet texture assets with renderer fallback)
         }
 
         const fs::path texturePath = entry.path().parent_path() / sheet.sheet;
@@ -185,7 +187,7 @@ bool TileAssetLoader::loadDirectory(const std::string& directoryPath, TileAssetR
 =======
             error = "failed to load texture for metadata '" + entry.path().string() + "': " + texturePath.string();
             return false;
->>>>>>> main
+>>>>>>> a0c40c4 (Add tilesheet texture assets with renderer fallback)
         }
 
         out.registerSheet(std::move(sheet), std::move(texture));
@@ -199,7 +201,7 @@ bool TileAssetLoader::loadDirectory(const std::string& directoryPath, TileAssetR
     }
 
 =======
->>>>>>> main
+>>>>>>> a0c40c4 (Add tilesheet texture assets with renderer fallback)
     return true;
 }
 } // namespace redclone::engine::assets
