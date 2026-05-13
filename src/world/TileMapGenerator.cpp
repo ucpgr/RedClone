@@ -9,7 +9,7 @@ void TileMapGenerator::generateTestMap(std::vector<Tile>& tiles, const int width
 {
     assert(width > 0);
     assert(height > 0);
-    assert(tiles.size() >= static_cast<std::size_t>(width * height));
+    assert(tiles.size() >= (static_cast<std::size_t>(width) * static_cast<std::size_t>(height)));
 
     for (int y = 0; y < height; ++y)
     {

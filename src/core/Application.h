@@ -10,6 +10,7 @@
 #include "gameplay/SelectionController.h"
 #include "world/TileMap.h"
 #include "world/TileMapRenderer.h"
+#include "world/World.h"
 
 namespace redclone::core
 {
@@ -34,5 +35,6 @@ class Application final : public engine::input::IInputObserver
     world::TileMap m_TileMap;
     world::TileMapRenderer m_TileMapRenderer;
     gameplay::SelectionController m_SelectionController;
+    world::World m_World;
 };
 } // namespace redclone::core
