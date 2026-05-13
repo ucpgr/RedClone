@@ -6,9 +6,16 @@
 
 namespace redclone::world
 {
+void TileMapRenderer::setTileAssets(const engine::assets::TileAssetRegistry* tileAssets)
+{
+    m_TileAssets = tileAssets;
+}
+
 void TileMapRenderer::render(engine::rendering::IRenderer& renderer, const TileMap& tileMap,
                              const gameplay::SelectionController& selectionController) const
 {
+    const auto defaultLookup = m_TileAssets ? m_TileAssets->findTileWithTexture(c_DefaultTileName) : engine::assets::TileLookup{};
+
     for (int y = 0; y < TileMap::c_Height; ++y)
     {
         for (int x = 0; x < TileMap::c_Width; ++x)
@@ -19,17 +26,19 @@ void TileMapRenderer::render(engine::rendering::IRenderer& renderer, const TileM
                 continue;
             }
 
-            engine::rendering::Color tileColor{70, 135, 70, 255};
-            if (*type == TileType::Dirt)
+            const auto center = engine::math::isometric::tileToIso({x, y});
+            if (defaultLookup.tile != nullptr && defaultLookup.texture != nullptr)
             {
-                tileColor = {130, 100, 60, 255};
-            }
-            if (*type == TileType::Blocked)
-            {
-                tileColor = {80, 80, 80, 255};
+                const auto& t = *defaultLookup.tile;
+                const engine::math::IntRect src{t.x, t.y, t.w, t.h};
+                renderer.drawTexturedSprite(*defaultLookup.texture, src, {center[0] - (t.w * 0.5F), center[1] - (t.h * 0.5F)});
+                continue;
             }
 
-            const auto center = engine::math::isometric::tileToIso({x, y});
+            engine::rendering::Color tileColor{70, 135, 70, 255};
+            if (*type == TileType::Dirt) tileColor = {130, 100, 60, 255};
+            if (*type == TileType::Blocked) tileColor = {80, 80, 80, 255};
+
             const float halfWidth = engine::math::isometric::c_TileWidth * 0.5F;
             const float halfHeight = engine::math::isometric::c_TileHeight * 0.5F;
             const std::array points = {

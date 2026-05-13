@@ -2,7 +2,9 @@
 
 #include <SFML/System/Clock.hpp>
 
+#include "engine/assets/TileAssetLoader.h"
 #include "engine/math/Isometric.h"
+#include <iostream>
 
 #include <algorithm>
 
@@ -10,6 +12,12 @@ namespace redclone::core
 {
 Application::Application() : m_Renderer(m_Window), m_InputAdapter(m_Window, m_InputSystem)
 {
+    std::string tileAssetError;
+    if (!engine::assets::TileAssetLoader::loadDirectory("assets/tiles", m_TileAssets, tileAssetError))
+    {
+        std::cerr << "Tile assets failed to load: " << tileAssetError << "\n";
+    }
+    m_TileMapRenderer.setTileAssets(&m_TileAssets);
     m_InputSystem.addObserver(*this);
     m_Camera.setViewportSize({1280.0F, 720.0F});
     m_Camera.setPosition(engine::math::isometric::worldToIso({32.0F, 32.0F}));
