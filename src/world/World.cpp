@@ -1,7 +1,11 @@
 #include "world/World.h"
 
+#include "engine/math/Isometric.h"
+
 #include <algorithm>
+#include <array>
 #include <cmath>
+#include <vector>
 
 namespace redclone::world
 {
@@ -20,7 +24,7 @@ void World::spawnTestUnits()
     for (int i = 0; i < 4; ++i)
     {
         const auto id = m_EntityManager.createEntity();
-        m_EntityManager.addTransform(id, {{220.0F + static_cast<float>(i * 40), 200.0F + static_cast<float>(i * 25)}});
+        m_EntityManager.addTransform(id, {{8.0F + static_cast<float>(i), 8.0F + static_cast<float>(i)}});
         m_EntityManager.addUnit(id, {80.0F, 100.0F, i % 2});
     }
 }
@@ -62,7 +66,16 @@ void World::update(const float deltaSeconds)
 
 void World::render(engine::rendering::IRenderer& renderer) const
 {
-    const engine::math::Vec2f unitSize{18.0F, 18.0F};
+    struct DrawUnit
+    {
+        ecs::EntityId entityId{};
+        engine::math::Vec2f worldPos{};
+        int ownerId{};
+        bool selected{};
+        float sortKey{};
+    };
+
+    std::vector<DrawUnit> drawUnits;
     for (const auto entityId : m_EntityManager.getAliveEntities())
     {
         const auto* transform = m_EntityManager.getTransform(entityId);
@@ -72,14 +85,27 @@ void World::render(engine::rendering::IRenderer& renderer) const
             continue;
         }
 
-        const engine::rendering::Color fillColor = unit->ownerId == 0 ? engine::rendering::Color{90, 160, 255, 255}
-                                                                       : engine::rendering::Color{255, 110, 110, 255};
-        const bool selected = m_EntityManager.hasSelection(entityId);
-        const auto topLeft = transform->position - (unitSize * 0.5F);
-        renderer.drawOutlinedRect(topLeft, unitSize, fillColor,
-                                  selected ? engine::rendering::Color{255, 255, 0, 255}
-                                           : engine::rendering::Color{20, 20, 20, 255},
-                                  selected ? -3.0F : -1.0F);
+        drawUnits.push_back({entityId, transform->position, unit->ownerId, m_EntityManager.hasSelection(entityId),
+                             transform->position[0] + transform->position[1]});
+    }
+
+    std::ranges::sort(drawUnits, [](const DrawUnit& lhs, const DrawUnit& rhs) { return lhs.sortKey < rhs.sortKey; });
+
+    for (const auto& drawUnit : drawUnits)
+    {
+        const auto isoPosition = engine::math::isometric::worldToIso(drawUnit.worldPos);
+        const engine::rendering::Color fillColor = drawUnit.ownerId == 0 ? engine::rendering::Color{90, 160, 255, 255}
+                                                                          : engine::rendering::Color{255, 110, 110, 255};
+        const std::array points = {
+            engine::math::Vec2f{isoPosition[0], isoPosition[1] - 9.0F},
+            engine::math::Vec2f{isoPosition[0] + 9.0F, isoPosition[1]},
+            engine::math::Vec2f{isoPosition[0], isoPosition[1] + 9.0F},
+            engine::math::Vec2f{isoPosition[0] - 9.0F, isoPosition[1]},
+        };
+        renderer.drawConvexPolygon(points, fillColor,
+                                   drawUnit.selected ? engine::rendering::Color{255, 255, 0, 255}
+                                                     : engine::rendering::Color{20, 20, 20, 255},
+                                   drawUnit.selected ? -3.0F : -1.0F);
     }
 }
 

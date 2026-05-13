@@ -2,6 +2,8 @@
 
 #include "world/TileMapGenerator.h"
 
+#include "engine/math/Isometric.h"
+
 #include <cstddef>
 
 namespace redclone::world
@@ -18,15 +20,14 @@ std::span<const Tile> TileMap::getTiles() const
 
 std::optional<engine::math::Vec2i> TileMap::worldToTile(const engine::math::Vec2f& worldPosition) const
 {
-    const int tileX = static_cast<int>(worldPosition[0]) / c_TileSize;
-    const int tileY = static_cast<int>(worldPosition[1]) / c_TileSize;
+    const auto tileCoord = engine::math::isometric::isoToTile(engine::math::isometric::worldToIso(worldPosition));
 
-    if (tileX < 0 || tileY < 0 || tileX >= c_Width || tileY >= c_Height)
+    if (tileCoord[0] < 0 || tileCoord[1] < 0 || tileCoord[0] >= c_Width || tileCoord[1] >= c_Height)
     {
         return std::nullopt;
     }
 
-    return engine::math::Vec2i(tileX, tileY);
+    return tileCoord;
 }
 
 std::optional<TileType> TileMap::getTileTypeAt(const engine::math::Vec2i& coord) const

@@ -4,6 +4,8 @@
 #include "engine/math/MathTypes.h"
 #include "engine/rendering/Color.h"
 
+#include <span>
+
 namespace redclone::engine::rendering
 {
 class IRenderer
@@ -19,5 +21,7 @@ class IRenderer
     virtual void drawOutlinedRect(const math::Vec2f& worldPosition, const math::Vec2f& size,
                                   const Color& fillColor, const Color& outlineColor,
                                   float outlineThickness) = 0;
+    virtual void drawConvexPolygon(std::span<const math::Vec2f> points, const Color& fillColor,
+                                   const Color& outlineColor, float outlineThickness) = 0;
 };
 } // namespace redclone::engine::rendering

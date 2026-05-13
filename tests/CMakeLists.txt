@@ -6,6 +6,7 @@ add_executable(RedCloneTests
     CameraControllerTests.cpp
     EcsTests.cpp
     WorldTests.cpp
+    IsometricTests.cpp
 )
 
 target_include_directories(RedCloneTests PRIVATE
@@ -20,6 +21,7 @@ target_sources(RedCloneTests PRIVATE
     ${CMAKE_SOURCE_DIR}/src/world/TileMapGenerator.cpp
     ${CMAKE_SOURCE_DIR}/src/gameplay/SelectionController.cpp
     ${CMAKE_SOURCE_DIR}/src/core/CameraController.cpp
+    ${CMAKE_SOURCE_DIR}/src/engine/math/Isometric.cpp
 )
 
 add_test(NAME RedCloneTests COMMAND RedCloneTests)

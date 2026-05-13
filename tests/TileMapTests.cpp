@@ -5,7 +5,7 @@
 int runTileMapTests()
 {
     redclone::world::TileMap tileMap;
-    const auto tile = tileMap.worldToTile({64.0F, 96.0F});
+    const auto tile = tileMap.worldToTile({2.2F, 3.7F});
     if (!tile || (*tile)[0] != 2 || (*tile)[1] != 3)
     {
         std::cerr << "TileMap::worldToTile failed\n";

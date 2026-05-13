@@ -2,6 +2,8 @@
 
 #include <SFML/System/Clock.hpp>
 
+#include "engine/math/Isometric.h"
+
 #include <algorithm>
 
 namespace redclone::core
@@ -10,7 +12,7 @@ Application::Application() : m_Renderer(m_Window), m_InputAdapter(m_Window, m_In
 {
     m_InputSystem.addObserver(*this);
     m_Camera.setViewportSize({1280.0F, 720.0F});
-    m_Camera.setPosition({640.0F, 360.0F});
+    m_Camera.setPosition(engine::math::isometric::worldToIso({32.0F, 32.0F}));
 }
 
 Application::~Application()
@@ -66,8 +68,9 @@ void Application::onInputEvent(const engine::input::InputEvent& event)
 
     if (event.type == InputEventType::MouseButtonPressed)
     {
-        const auto worldPosition = m_Camera.screenToWorld(
+        const auto renderPosition = m_Camera.screenToWorld(
             {static_cast<float>(event.mousePosition[0]), static_cast<float>(event.mousePosition[1])});
+        const auto worldPosition = engine::math::isometric::isoToWorld(renderPosition);
 
         if (event.mouseButton == MouseButton::Left)
         {
