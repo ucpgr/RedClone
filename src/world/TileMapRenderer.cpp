@@ -37,12 +37,17 @@ void TileMapRenderer::render(engine::rendering::IRenderer& renderer, const TileM
         for (int x = 0; x < TileMap::c_Width; ++x)
         {
             const auto type = tileMap.getTileTypeAt({x, y});
+            const auto height = tileMap.getTileHeightAt({x, y});
             if (!type.has_value())
             {
                 continue;
             }
 
-            const auto center = engine::math::isometric::tileToIso({x, y});
+            auto center = engine::math::isometric::tileToIso({x, y});
+            if (height.has_value())
+            {
+                center[1] -= static_cast<float>(*height) * c_HeightStep;
+            }
             if (defaultLookup.tile != nullptr && defaultLookup.texture != nullptr)
             {
                 const auto& t = *defaultLookup.tile;
@@ -69,7 +74,11 @@ void TileMapRenderer::render(engine::rendering::IRenderer& renderer, const TileM
 
     if (const auto selected = selectionController.getSelectedTile())
     {
-        const auto center = engine::math::isometric::tileToIso(*selected);
+        auto center = engine::math::isometric::tileToIso(*selected);
+        if (const auto height = tileMap.getTileHeightAt(*selected); height.has_value())
+        {
+            center[1] -= static_cast<float>(*height) * c_HeightStep;
+        }
         const float halfWidth = engine::math::isometric::c_TileWidth * 0.5F;
         const float halfHeight = engine::math::isometric::c_TileHeight * 0.5F;
         const std::array points = {
@@ -80,5 +89,6 @@ void TileMapRenderer::render(engine::rendering::IRenderer& renderer, const TileM
         };
         renderer.drawConvexPolygon(points, {0, 0, 0, 0}, {255, 255, 0, 255}, -3.0F);
     }
+    // TODO: tile picking currently uses base isometric plane and does not account for raised tile heights.
 }
 } // namespace redclone::world
