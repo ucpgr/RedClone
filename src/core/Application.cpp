@@ -52,7 +52,7 @@ int Application::run()
         m_Renderer.setCamera(m_Camera);
 
         m_TileMapRenderer.render(m_Renderer, m_TileMap, m_SelectionController);
-        m_World.render(m_Renderer);
+        m_World.render(m_Renderer, m_TileMap);
         m_Renderer.resetCamera();
         m_Renderer.endFrame();
     }
@@ -82,11 +82,18 @@ void Application::onInputEvent(const engine::input::InputEvent& event)
         m_Camera.zoomBy(event.mouseWheelDelta * 0.1F);
     }
 
+    if (event.type == InputEventType::WindowResized)
+    {
+        m_Camera.setViewportSize(
+            {static_cast<float>(event.windowSize[0]), static_cast<float>(event.windowSize[1])});
+    }
+
     if (event.type == InputEventType::MouseButtonPressed)
     {
         const auto renderPosition = m_Camera.screenToWorld(
             {static_cast<float>(event.mousePosition[0]), static_cast<float>(event.mousePosition[1])});
-        const auto worldPosition = engine::math::isometric::isoToWorld(renderPosition);
+        const auto terrainHit = m_TileMap.isoToTerrainHit(renderPosition);
+        const auto worldPosition = terrainHit ? terrainHit->worldPosition : engine::math::isometric::isoToWorld(renderPosition);
         REDCLONE_LOG_DEBUG(std::string("Mouse press screen(") + std::to_string(event.mousePosition[0]) + "," +
                            std::to_string(event.mousePosition[1]) + ") iso(" + std::to_string(renderPosition[0]) +
                            "," + std::to_string(renderPosition[1]) + ") world(" + std::to_string(worldPosition[0]) +
@@ -94,14 +101,14 @@ void Application::onInputEvent(const engine::input::InputEvent& event)
 
         if (event.mouseButton == MouseButton::Left)
         {
-            m_World.selectUnitAt(worldPosition);
+            m_World.selectUnitAt(renderPosition, m_TileMap);
             const bool hasSelectedUnit = m_World.hasSelectedUnits();
 
             if (!hasSelectedUnit)
             {
-                if (const auto tileCoord = m_TileMap.worldToTile(worldPosition))
+                if (terrainHit.has_value())
                 {
-                    m_SelectionController.selectTile(*tileCoord);
+                    m_SelectionController.selectTile(terrainHit->tileCoord);
                 }
                 else
                 {
@@ -116,7 +123,10 @@ void Application::onInputEvent(const engine::input::InputEvent& event)
 
         if (event.mouseButton == MouseButton::Right)
         {
-            m_World.issueMoveCommandToSelected(worldPosition);
+            if (terrainHit.has_value())
+            {
+                m_World.issueMoveCommandToSelected(terrainHit->worldPosition);
+            }
         }
     }
 }

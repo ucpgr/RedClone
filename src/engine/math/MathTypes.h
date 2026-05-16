@@ -7,5 +7,6 @@ namespace redclone::engine::math
 {
 using Vec2f = mathfu::Vector<float, 2>;
 using Vec2i = mathfu::Vector<int, 2>;
+using Vec3f = mathfu::Vector<float, 3>;
 using Mat4f = mathfu::Matrix<float, 4>;
 } // namespace redclone::engine::math

@@ -1,5 +1,6 @@
 int runCamera2DTests();
 int runTileMapTests();
+int runTerrainMeshTests();
 int runSelectionControllerTests();
 int runCameraControllerTests();
 int runEcsTests();
@@ -7,6 +8,7 @@ int runWorldTests();
 int runIsometricTests();
 int runScriptEngineTests();
 int runLoggerTests();
+int runTileAssetTests();
 int runTileAssetRegistryTests();
 int runTileAssetMetadataTests();
 int runTileConnectorTests();
@@ -18,6 +20,10 @@ int main()
         return 1;
     }
     if (runTileMapTests() != 0)
+    {
+        return 1;
+    }
+    if (runTerrainMeshTests() != 0)
     {
         return 1;
     }
@@ -50,6 +56,10 @@ int main()
         return 1;
     }
 
+    if (runTileAssetTests() != 0)
+    {
+        return 1;
+    }
     if (runTileAssetRegistryTests() != 0)
     {
         return 1;

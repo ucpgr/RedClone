@@ -8,6 +8,7 @@
 #include <sstream>
 #include <unordered_set>
 #include <vector>
+#include <algorithm>
 
 extern "C"
 {
@@ -86,8 +87,7 @@ void assignConnectors(TileDefinition& tile)
 bool TileAssetLoader::loadMetadataFile(const std::string& filePath, TileSheetDefinition& out, std::string& error)
 {
     lua_State* L = luaL_newstate();
-    luaL_openlibs(L);
-    try
+        try
     {
         if (luaL_dofile(L, filePath.c_str()) != LUA_OK) throw std::runtime_error(lua_tostring(L, -1));
         if (!lua_istable(L, -1)) throw std::runtime_error("metadata must return table");

@@ -14,11 +14,9 @@ class TileMapRenderer
                 const gameplay::SelectionController& selectionController) const;
 
   private:
-    static constexpr const char* c_DefaultTileName = "grass_raised_067";
-    static constexpr float c_HeightStep = 16.0F;
-    const engine::assets::TileAssetRegistry* m_TileAssets = nullptr;
-    mutable bool m_LoggedMissingDefault = false;
-    mutable bool m_LoggedTexturedPath = false;
-    mutable bool m_LoggedPrimitiveFallback = false;
+    [[nodiscard]] static engine::math::Vec2f projectTerrainVertex(const engine::math::Vec3f& position);
+    [[nodiscard]] static engine::rendering::Color terrainColor(TileType type, float shade);
+
+    mutable bool m_LoggedMeshPath = false;
 };
 } // namespace redclone::world

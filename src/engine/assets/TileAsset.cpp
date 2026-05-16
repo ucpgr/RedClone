@@ -2,6 +2,21 @@
 
 namespace redclone::engine::assets
 {
+std::size_t TileAssetRegistry::TransparentStringHash::operator()(std::string_view value) const noexcept
+{
+    return std::hash<std::string_view>{}(value);
+}
+
+std::size_t TileAssetRegistry::TransparentStringHash::operator()(const std::string& value) const noexcept
+{
+    return (*this)(std::string_view{value});
+}
+
+std::size_t TileAssetRegistry::TransparentStringHash::operator()(const char* value) const noexcept
+{
+    return (*this)(std::string_view{value});
+}
+
 void TileAssetRegistry::registerSheet(TileSheetDefinition sheet, std::shared_ptr<sf::Texture> texture)
 {
     const std::size_t sheetIndex = m_Sheets.size();
@@ -22,7 +37,7 @@ const TileDefinition* TileAssetRegistry::findTile(std::string_view name) const
 
 TileLookup TileAssetRegistry::findTileWithTexture(std::string_view name) const
 {
-    const auto it = m_ByName.find(std::string(name));
+    const auto it = m_ByName.find(name);
     if (it == m_ByName.end())
     {
         return {};
@@ -44,6 +59,6 @@ std::size_t TileAssetRegistry::tileCount() const { return m_ByName.size(); }
 
 bool TileAssetRegistry::containsTile(std::string_view name) const
 {
-    return m_ByName.contains(std::string(name));
+    return m_ByName.contains(name);
 }
 } // namespace redclone::engine::assets

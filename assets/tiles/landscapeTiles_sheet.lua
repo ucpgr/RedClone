@@ -78,7 +78,7 @@ return {
     { name = "grass_flat_064", terrain = "grass", kind = "flat", height = 0, x = 0, y = 1057, w = 133, h = 99 },
     { name = "mixed_flat_065", terrain = "mixed", kind = "flat", height = 0, x = 398, y = 447, w = 132, h = 99 },
     { name = "water_flat_066", terrain = "water", kind = "flat", height = 0, x = 398, y = 364, w = 132, h = 83 },
-    { name = "grass_ramp_southwest", terrain = "grass", kind = "ramp", direction = "southwest", low_height = 0, high_height = 1, x = 398, y = 265, w = 132, h = 99 },
+    { name = "grass_raised_067", terrain = "grass", kind = "ramp", direction = "north", low_height = 0, high_height = 1, x = 398, y = 265, w = 132, h = 99 },
     { name = "water_flat_068", terrain = "water", kind = "flat", height = 0, x = 398, y = 166, w = 132, h = 99 },
     { name = "water_flat_069", terrain = "water", kind = "flat", height = 0, x = 398, y = 83, w = 132, h = 83 },
     { name = "grass_flat_070", terrain = "grass", kind = "flat", height = 0, x = 398, y = 0, w = 132, h = 83 },

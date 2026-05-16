@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 
+#include <functional>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -84,6 +85,15 @@ class TileAssetRegistry
     [[nodiscard]] bool containsTile(std::string_view name) const;
 
   private:
+    struct TransparentStringHash
+    {
+        using is_transparent = void;
+
+        [[nodiscard]] std::size_t operator()(std::string_view value) const noexcept;
+        [[nodiscard]] std::size_t operator()(const std::string& value) const noexcept;
+        [[nodiscard]] std::size_t operator()(const char* value) const noexcept;
+    };
+
     struct SheetRecord
     {
         TileSheetDefinition definition;
@@ -91,6 +101,7 @@ class TileAssetRegistry
     };
 
     std::vector<SheetRecord> m_Sheets;
-    std::unordered_map<std::string, std::pair<std::size_t, std::size_t>> m_ByName;
+    std::unordered_map<std::string, std::pair<std::size_t, std::size_t>, TransparentStringHash, std::equal_to<>>
+        m_ByName;
 };
 } // namespace redclone::engine::assets

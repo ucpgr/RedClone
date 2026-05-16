@@ -64,6 +64,13 @@ void SfmlInputAdapter::pollEvents()
             m_InputSystem.notify({.type = InputEventType::Closed});
             continue;
         }
+        if (const auto* resized = event->getIf<sf::Event::Resized>())
+        {
+            m_InputSystem.notify({.type = InputEventType::WindowResized,
+                                  .windowSize = {static_cast<int>(resized->size.x),
+                                                 static_cast<int>(resized->size.y)}});
+            continue;
+        }
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
         {
             m_InputSystem.notify({.type = InputEventType::KeyPressed, .key = mapKey(keyPressed->code)});

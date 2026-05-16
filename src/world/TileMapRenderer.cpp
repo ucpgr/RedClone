@@ -3,92 +3,86 @@
 
 #include "engine/math/Isometric.h"
 
+#include <algorithm>
 #include <array>
+#include <vector>
 
 namespace redclone::world
 {
 void TileMapRenderer::setTileAssets(const engine::assets::TileAssetRegistry* tileAssets)
 {
-    m_TileAssets = tileAssets;
+    (void)tileAssets;
 }
 
 void TileMapRenderer::render(engine::rendering::IRenderer& renderer, const TileMap& tileMap,
                              const gameplay::SelectionController& selectionController) const
 {
-    const auto defaultLookup = m_TileAssets ? m_TileAssets->findTileWithTexture(c_DefaultTileName) : engine::assets::TileLookup{};
-    if (defaultLookup.tile == nullptr && !m_LoggedMissingDefault)
+    if (!m_LoggedMeshPath)
     {
-        REDCLONE_LOG_WARNING("TileMapRenderer missing default tile grass_raised_067.");
-        m_LoggedMissingDefault = true;
-    }
-    if (defaultLookup.tile != nullptr && defaultLookup.texture != nullptr && !m_LoggedTexturedPath)
-    {
-        REDCLONE_LOG_INFO("TileMapRenderer using textured tile rendering for grass_raised_067.");
-        m_LoggedTexturedPath = true;
-    }
-    if ((defaultLookup.tile == nullptr || defaultLookup.texture == nullptr) && !m_LoggedPrimitiveFallback)
-    {
-        REDCLONE_LOG_WARNING("TileMapRenderer falling back to primitive diamond rendering.");
-        m_LoggedPrimitiveFallback = true;
+        REDCLONE_LOG_INFO("TileMapRenderer using projected terrain mesh rendering.");
+        m_LoggedMeshPath = true;
     }
 
-    for (int y = 0; y < TileMap::c_Height; ++y)
+    const auto& terrainMesh = tileMap.getTerrainMesh();
+    const auto vertices = terrainMesh.getVertices();
+    std::vector<const TerrainFace*> drawFaces;
+    for (const auto& face : terrainMesh.getFaces())
     {
-        for (int x = 0; x < TileMap::c_Width; ++x)
-        {
-            const auto type = tileMap.getTileTypeAt({x, y});
-            const auto height = tileMap.getTileHeightAt({x, y});
-            if (!type.has_value())
-            {
-                continue;
-            }
+        drawFaces.push_back(&face);
+    }
+    std::ranges::sort(drawFaces,
+                      [](const TerrainFace* lhs, const TerrainFace* rhs) { return lhs->sortKey < rhs->sortKey; });
 
-            auto center = engine::math::isometric::tileToIso({x, y});
-            if (height.has_value())
-            {
-                center[1] -= static_cast<float>(*height) * c_HeightStep;
-            }
-            if (defaultLookup.tile != nullptr && defaultLookup.texture != nullptr)
-            {
-                const auto& t = *defaultLookup.tile;
-                const engine::math::IntRect src{t.x, t.y, t.w, t.h};
-                renderer.drawTexturedSprite(*defaultLookup.texture, src, {center[0] - (t.w * 0.5F), center[1] - (t.h * 0.5F)});
-                continue;
-            }
-
-            engine::rendering::Color tileColor{70, 135, 70, 255};
-            if (*type == TileType::Dirt) tileColor = {130, 100, 60, 255};
-            if (*type == TileType::Blocked) tileColor = {80, 80, 80, 255};
-
-            const float halfWidth = engine::math::isometric::c_TileWidth * 0.5F;
-            const float halfHeight = engine::math::isometric::c_TileHeight * 0.5F;
-            const std::array points = {
-                engine::math::Vec2f{center[0], center[1] - halfHeight},
-                engine::math::Vec2f{center[0] + halfWidth, center[1]},
-                engine::math::Vec2f{center[0], center[1] + halfHeight},
-                engine::math::Vec2f{center[0] - halfWidth, center[1]},
-            };
-            renderer.drawConvexPolygon(points, tileColor, {30, 30, 30, 255}, -1.0F);
-        }
+    for (const auto* face : drawFaces)
+    {
+        const std::array points = {
+            projectTerrainVertex(vertices[face->vertexIndices[0]].position),
+            projectTerrainVertex(vertices[face->vertexIndices[1]].position),
+            projectTerrainVertex(vertices[face->vertexIndices[2]].position),
+            projectTerrainVertex(vertices[face->vertexIndices[3]].position),
+        };
+        renderer.drawConvexPolygon(points, terrainColor(face->type, face->shade), {24, 32, 28, 190}, -0.75F);
     }
 
     if (const auto selected = selectionController.getSelectedTile())
     {
-        auto center = engine::math::isometric::tileToIso(*selected);
-        if (const auto height = tileMap.getTileHeightAt(*selected); height.has_value())
+        for (const auto& face : terrainMesh.getFaces())
         {
-            center[1] -= static_cast<float>(*height) * c_HeightStep;
+            if (face.tileCoord != *selected)
+            {
+                continue;
+            }
+            const std::array points = {
+                projectTerrainVertex(vertices[face.vertexIndices[0]].position),
+                projectTerrainVertex(vertices[face.vertexIndices[1]].position),
+                projectTerrainVertex(vertices[face.vertexIndices[2]].position),
+                projectTerrainVertex(vertices[face.vertexIndices[3]].position),
+            };
+            renderer.drawConvexPolygon(points, {0, 0, 0, 0}, {255, 255, 0, 255}, -3.0F);
+            break;
         }
-        const float halfWidth = engine::math::isometric::c_TileWidth * 0.5F;
-        const float halfHeight = engine::math::isometric::c_TileHeight * 0.5F;
-        const std::array points = {
-            engine::math::Vec2f{center[0], center[1] - halfHeight},
-            engine::math::Vec2f{center[0] + halfWidth, center[1]},
-            engine::math::Vec2f{center[0], center[1] + halfHeight},
-            engine::math::Vec2f{center[0] - halfWidth, center[1]},
-        };
-        renderer.drawConvexPolygon(points, {0, 0, 0, 0}, {255, 255, 0, 255}, -3.0F);
     }
-    // TODO: tile picking currently uses base isometric plane and does not account for raised tile heights.
+}
+
+engine::math::Vec2f TileMapRenderer::projectTerrainVertex(const engine::math::Vec3f& position)
+{
+    return engine::math::isometric::worldToIso(position);
+}
+
+engine::rendering::Color TileMapRenderer::terrainColor(const TileType type, const float shade)
+{
+    engine::rendering::Color base{74, 139, 74, 255};
+    if (type == TileType::Dirt)
+    {
+        base = {136, 103, 62, 255};
+    }
+    if (type == TileType::Blocked)
+    {
+        base = {86, 88, 86, 255};
+    }
+
+    return {static_cast<unsigned char>(std::clamp(static_cast<float>(base.r) * shade, 0.0F, 255.0F)),
+            static_cast<unsigned char>(std::clamp(static_cast<float>(base.g) * shade, 0.0F, 255.0F)),
+            static_cast<unsigned char>(std::clamp(static_cast<float>(base.b) * shade, 0.0F, 255.0F)), base.a};
 }
 } // namespace redclone::world

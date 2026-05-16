@@ -1,5 +1,7 @@
 #include "world/World.h"
 
+#include "engine/math/Isometric.h"
+
 #include <cmath>
 #include <iostream>
 
@@ -15,6 +17,7 @@ float distance(const redclone::engine::math::Vec2f& a, const redclone::engine::m
 int runWorldTests()
 {
     redclone::world::World world;
+    redclone::world::TileMap tileMap;
     auto& ecs = world.getEntityManager();
 
     redclone::ecs::EntityId selected = 0;
@@ -39,10 +42,29 @@ int runWorldTests()
         return 1;
     }
 
-    world.selectUnitAt(selectedTransform->position);
+    const float selectedHeight = tileMap.sampleHeightAt(selectedTransform->position);
+    const auto selectedIso =
+        redclone::engine::math::isometric::worldToIso({selectedTransform->position[0], selectedTransform->position[1],
+                                                       selectedHeight});
+    world.selectUnitAt(selectedIso, tileMap);
     if (!world.hasSelectedUnits())
     {
         std::cerr << "Selecting a unit should mark selection state in world\n";
+        return 1;
+    }
+
+    world.clearUnitSelection();
+    world.selectUnitAt(selectedIso + redclone::engine::math::Vec2f{80.0F, 0.0F}, tileMap);
+    if (world.hasSelectedUnits())
+    {
+        std::cerr << "Selecting away from rendered unit position should not mark selection state\n";
+        return 1;
+    }
+
+    world.selectUnitAt(selectedIso + redclone::engine::math::Vec2f{8.0F, 0.0F}, tileMap);
+    if (!world.hasSelectedUnits())
+    {
+        std::cerr << "Selecting near rendered unit position should mark selection state\n";
         return 1;
     }
 

@@ -22,9 +22,16 @@ FetchContent_Declare(
     GIT_SUBMODULES_RECURSE TRUE
 )
 
+if(POLICY CMP0169)
+    cmake_policy(PUSH)
+    cmake_policy(SET CMP0169 OLD)
+endif()
 FetchContent_GetProperties(mathfu)
 if(NOT mathfu_POPULATED)
     FetchContent_Populate(mathfu)
+endif()
+if(POLICY CMP0169)
+    cmake_policy(POP)
 endif()
 
 FetchContent_Declare(
@@ -81,9 +88,16 @@ FetchContent_Declare(
     GIT_TAG v4.0.0
     GIT_SHALLOW ON
 )
+if(POLICY CMP0169)
+    cmake_policy(PUSH)
+    cmake_policy(SET CMP0169 OLD)
+endif()
 FetchContent_GetProperties(luacxx)
 if(NOT luacxx_POPULATED)
     FetchContent_Populate(luacxx)
+endif()
+if(POLICY CMP0169)
+    cmake_policy(POP)
 endif()
 
 add_library(luacxx_interface INTERFACE)
@@ -101,20 +115,14 @@ set(REDCLONE_SOURCES
     src/ecs/Component.cpp
     src/ecs/EntityManager.cpp
     src/ecs/System.cpp
-    src/engine/AssetManager.cpp
-    src/engine/AudioSystem.cpp
     src/engine/camera/Camera2D.cpp
     src/engine/input/InputSystem.cpp
     src/engine/input/SfmlInputAdapter.cpp
     src/engine/math/Isometric.cpp
-    src/engine/Renderer.cpp
     src/engine/rendering/SfmlRenderer.cpp
     src/engine/window/Window.cpp
-    src/gameplay/Building.cpp
     src/gameplay/Order.cpp
     src/gameplay/SelectionController.cpp
-    src/gameplay/Unit.cpp
-    src/gameplay/Weapon.cpp
     src/main.cpp
     src/scripting/ScriptEngine.cpp
     src/ui/UISystem.cpp
@@ -122,6 +130,7 @@ set(REDCLONE_SOURCES
     src/world/TileMap.cpp
     src/world/TileMapGenerator.cpp
     src/world/TileMapRenderer.cpp
+    src/world/TerrainMesh.cpp
     src/world/World.cpp
     src/engine/assets/TileAsset.cpp
     src/engine/assets/TileAssetLoader.cpp

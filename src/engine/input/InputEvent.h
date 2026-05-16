@@ -14,7 +14,8 @@ enum class InputEventType
     MouseButtonPressed,
     MouseButtonReleased,
     MouseMoved,
-    MouseWheelScrolled
+    MouseWheelScrolled,
+    WindowResized
 };
 
 struct InputEvent
@@ -23,6 +24,7 @@ struct InputEvent
     Key key{Key::Unknown};
     MouseButton mouseButton{MouseButton::Unknown};
     math::Vec2i mousePosition{};
+    math::Vec2i windowSize{};
     float mouseWheelDelta{};
 };
 } // namespace redclone::engine::input

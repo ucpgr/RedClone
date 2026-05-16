@@ -2,6 +2,7 @@ add_executable(RedCloneTests
     TestMain.cpp
     Camera2DTests.cpp
     TileMapTests.cpp
+    TerrainMeshTests.cpp
     SelectionControllerTests.cpp
     CameraControllerTests.cpp
     EcsTests.cpp
@@ -9,6 +10,7 @@ add_executable(RedCloneTests
     IsometricTests.cpp
     ScriptEngineTests.cpp
     LoggerTests.cpp
+    TileAssetTests.cpp
     TileAssetRegistryTests.cpp
     TileAssetMetadataTests.cpp
     TileConnectorTests.cpp
@@ -24,6 +26,7 @@ target_sources(RedCloneTests PRIVATE
     ${CMAKE_SOURCE_DIR}/src/engine/camera/Camera2D.cpp
     ${CMAKE_SOURCE_DIR}/src/world/TileMap.cpp
     ${CMAKE_SOURCE_DIR}/src/world/TileMapGenerator.cpp
+    ${CMAKE_SOURCE_DIR}/src/world/TerrainMesh.cpp
     ${CMAKE_SOURCE_DIR}/src/gameplay/SelectionController.cpp
     ${CMAKE_SOURCE_DIR}/src/core/CameraController.cpp
     ${CMAKE_SOURCE_DIR}/src/core/Logger.cpp

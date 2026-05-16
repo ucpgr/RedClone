@@ -3,11 +3,11 @@
 
 #include "engine/math/Isometric.h"
 
-#include <algorithm>
 #include <array>
+#include <algorithm>
 #include <cmath>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace redclone::world
 {
@@ -67,7 +67,7 @@ void World::update(const float deltaSeconds)
     }
 }
 
-void World::render(engine::rendering::IRenderer& renderer) const
+void World::render(engine::rendering::IRenderer& renderer, const TileMap& tileMap) const
 {
     struct DrawUnit
     {
@@ -75,6 +75,7 @@ void World::render(engine::rendering::IRenderer& renderer) const
         engine::math::Vec2f worldPos{};
         int ownerId{};
         bool selected{};
+        float terrainHeight{};
         float sortKey{};
     };
 
@@ -88,15 +89,17 @@ void World::render(engine::rendering::IRenderer& renderer) const
             continue;
         }
 
+        const float terrainHeight = tileMap.sampleHeightAt(transform->position);
         drawUnits.push_back({entityId, transform->position, unit->ownerId, m_EntityManager.hasSelection(entityId),
-                             transform->position[0] + transform->position[1]});
+                             terrainHeight, transform->position[0] + transform->position[1] + (terrainHeight * 0.01F)});
     }
 
     std::ranges::sort(drawUnits, [](const DrawUnit& lhs, const DrawUnit& rhs) { return lhs.sortKey < rhs.sortKey; });
 
     for (const auto& drawUnit : drawUnits)
     {
-        const auto isoPosition = engine::math::isometric::worldToIso(drawUnit.worldPos);
+        const auto isoPosition =
+            engine::math::isometric::worldToIso({drawUnit.worldPos[0], drawUnit.worldPos[1], drawUnit.terrainHeight});
         const engine::rendering::Color fillColor = drawUnit.ownerId == 0 ? engine::rendering::Color{90, 160, 255, 255}
                                                                           : engine::rendering::Color{255, 110, 110, 255};
         const std::array points = {
@@ -112,9 +115,12 @@ void World::render(engine::rendering::IRenderer& renderer) const
     }
 }
 
-void World::selectUnitAt(const engine::math::Vec2f& worldPosition)
+void World::selectUnitAt(const engine::math::Vec2f& isoPosition, const TileMap& tileMap)
 {
     clearUnitSelection();
+
+    ecs::EntityId bestEntity = 0;
+    float bestDistance = c_SelectionRadius;
     for (const auto entityId : m_EntityManager.getAliveEntities())
     {
         const auto* transform = m_EntityManager.getTransform(entityId);
@@ -125,14 +131,25 @@ void World::selectUnitAt(const engine::math::Vec2f& worldPosition)
         }
         (void)unit;
 
-        const auto delta = transform->position - worldPosition;
-        if (length(delta) <= c_SelectionRadius)
+        const float terrainHeight = tileMap.sampleHeightAt(transform->position);
+        const auto unitIsoPosition =
+            engine::math::isometric::worldToIso({transform->position[0], transform->position[1], terrainHeight});
+        const auto delta = unitIsoPosition - isoPosition;
+        const float distance = length(delta);
+        if (distance <= bestDistance)
         {
-            m_EntityManager.addSelection(entityId, {});
-            REDCLONE_LOG_DEBUG(std::string("Unit selected entity=") + std::to_string(entityId));
-            return;
+            bestDistance = distance;
+            bestEntity = entityId;
         }
     }
+
+    if (bestEntity != 0)
+    {
+        m_EntityManager.addSelection(bestEntity, {});
+        REDCLONE_LOG_DEBUG(std::string("Unit selected entity=") + std::to_string(bestEntity));
+        return;
+    }
+
     REDCLONE_LOG_DEBUG("Unit selection failed.");
 }
 

@@ -11,6 +11,13 @@ Vec2f worldToIso(const Vec2f& world)
     return {(world[0] - world[1]) * halfWidth, (world[0] + world[1]) * halfHeight};
 }
 
+Vec2f worldToIso(const Vec3f& world)
+{
+    auto projected = worldToIso({world[0], world[1]});
+    projected[1] -= world[2] * c_TerrainHeightStep;
+    return projected;
+}
+
 Vec2f isoToWorld(const Vec2f& iso)
 {
     const float halfWidth = c_TileWidth * 0.5F;

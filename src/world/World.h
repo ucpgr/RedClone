@@ -3,6 +3,7 @@
 #include "ecs/EntityManager.h"
 #include "engine/math/MathTypes.h"
 #include "engine/rendering/IRenderer.h"
+#include "world/TileMap.h"
 
 namespace redclone::world
 {
@@ -12,9 +13,9 @@ class World
     World();
 
     void update(float deltaSeconds);
-    void render(engine::rendering::IRenderer& renderer) const;
+    void render(engine::rendering::IRenderer& renderer, const TileMap& tileMap) const;
 
-    void selectUnitAt(const engine::math::Vec2f& worldPosition);
+    void selectUnitAt(const engine::math::Vec2f& isoPosition, const TileMap& tileMap);
     void clearUnitSelection();
     void issueMoveCommandToSelected(const engine::math::Vec2f& destination);
     [[nodiscard]] bool hasSelectedUnits() const;

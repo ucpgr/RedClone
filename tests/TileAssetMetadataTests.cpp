@@ -49,5 +49,14 @@ int runTileAssetMetadataTests()
         return 1;
     }
 
+    const std::string unsafePath = (tempDir / "tile_unsafe.lua").string();
+    writeFile(unsafePath,
+              "return { sheet=os.date(), tile_width=64, tile_height=32, tiles={{name='grass',terrain='grass',kind='flat',height=0,x=0,y=0,w=64,h=32}} }");
+    if (TileAssetLoader::loadMetadataFile(unsafePath, sheet, error) || error.empty())
+    {
+        std::cerr << "metadata loader should not expose Lua standard libraries\n";
+        return 1;
+    }
+
     return 0;
 }
